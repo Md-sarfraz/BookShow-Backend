@@ -1,0 +1,42 @@
+package com.jwtAuthentication.jwt.service;
+
+import com.jwtAuthentication.jwt.model.User;
+import com.jwtAuthentication.jwt.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    public String registerUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return "User registered successfully";
+    }
+
+    public String verifyUser(User user) {
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            if(authentication.isAuthenticated()){
+                return jwtService.generateToken(user.getUsername());
+            }
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("failed to authenticate user");
+        }
+        return null;
+    }
+}
