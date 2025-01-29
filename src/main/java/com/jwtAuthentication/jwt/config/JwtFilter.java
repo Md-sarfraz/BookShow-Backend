@@ -12,10 +12,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+@Component
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
@@ -27,9 +28,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String token=null;
         String userName=null;
         if(authHeader != null && authHeader.startsWith("Bearer ")){
-            token=authHeader.substring(7);
+            token=authHeader.substring(7).trim();
+
             userName=jwtService.extractUserName(token);
+            System.out.println("hello " + userName);
         }
+
 
         if(userName != null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails=applicationContext.getBean(MyUserDetailService.class).loadUserByUsername(userName);

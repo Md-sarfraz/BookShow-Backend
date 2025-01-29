@@ -15,10 +15,12 @@ public class MyUserDetailService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       User user=userRepository.findByUsername(username);
-        if(username==null){
-            throw new UsernameNotFoundException("User not found with username: " + username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println(email);
+       User user=userRepository.findByEmail(email);
+        System.out.println(user);
+        if(email==null){
+            throw new UsernameNotFoundException("User not found with username: " + email);
         }
         return new UserPrincipal(user);
     }
