@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -14,6 +15,7 @@ public class User {
     @Column
     String username;
     @Column
+    @JsonIgnore
     String password;
     @Column
     String email;

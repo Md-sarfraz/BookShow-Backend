@@ -1,5 +1,7 @@
 package com.jwtAuthentication.jwt.controllers;
 
+import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
+import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ public class AuthController {
         return userService.registerUser(user);
     }
     @PostMapping("/login")
-    public String loginUser(@RequestBody User user) {
-      return userService.verifyUser(user);
+    public LoginResponse loginUser(@RequestBody LoginRequest loginRequest) {
+      return userService.verifyUser(loginRequest);
 }
 }

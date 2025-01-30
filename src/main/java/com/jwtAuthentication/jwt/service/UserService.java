@@ -1,5 +1,7 @@
 package com.jwtAuthentication.jwt.service;
 
+import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
+import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,16 @@ public class UserService {
         return "User registered successfully";
     }
 
-    public String verifyUser(User user) {
+    public LoginResponse verifyUser(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             if(authentication.isAuthenticated()){
+                User user=userRepository.findByEmail(loginRequest.getEmail());
 
-                return jwtService.generateToken(user.getEmail());
+                String token =jwtService.generateToken(loginRequest.getEmail());
+
+                return new LoginResponse(token,user);
             }
         } catch (AuthenticationException e) {
             throw new RuntimeException("failed to authenticate user");
