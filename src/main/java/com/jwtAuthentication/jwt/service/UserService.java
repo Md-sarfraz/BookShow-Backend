@@ -5,6 +5,7 @@ import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -28,30 +31,27 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     public String registerUser(User user, MultipartFile profileImage) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // Handle profile image upload
-        if (profileImage != null && !profileImage.isEmpty()) {
-            try {
-                String uploadDir = "uploads/";
-                File uploadPath = new File(uploadDir);
-                if (!uploadPath.exists()) {
-                    uploadPath.mkdirs();  // Create directory if it does not exist
-                }
-
-                String uniqueFileName = UUID.randomUUID().toString() + "_" + profileImage.getOriginalFilename();
-                String filePath = uploadDir + uniqueFileName;
-                profileImage.transferTo(new File(filePath));
-
-                user.setProfileImage(filePath); // Save image path to database
-            } catch (IOException e) {
-                return "Failed to upload profile image";
+        try {
+            // Handle Profile Image
+            if (profileImage != null && !profileImage.isEmpty()) {
+                // Create the directory if it doesn't exist
+                Files.createDirectories(Paths.get(uploadDir)); // Will create C:/myapp/uploads/
+                String fileName = UUID.randomUUID().toString() + "_" + profileImage.getOriginalFilename();
+                File file = new File(uploadDir + fileName);
+                profileImage.transferTo(file); // Save the file
+                user.setProfileImage(fileName);
             }
-        }
 
-        userRepository.save(user);
-        return "User registered successfully";
+            // Save user to database (Assuming you have a repository)
+            userRepository.save(user);
+            return "User registered successfully!";
+        } catch (IOException e) {
+            return "Failed to upload profile image: " + e.getMessage();
+        }
     }
 
     public LoginResponse verifyUser(LoginRequest loginRequest) {
