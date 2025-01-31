@@ -11,5 +11,4 @@ public class UserController {
     public String postUser() {
         return "User created successfully";
     }
-
 }

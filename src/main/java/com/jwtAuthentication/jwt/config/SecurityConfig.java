@@ -34,8 +34,9 @@ public class SecurityConfig {
         httpSecurity
         .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/api/v1/login").permitAll()
-                .anyRequest().authenticated())
+                        .requestMatchers("/api/v1/login","/api/v1/register", "/api/v1/register/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
         .sessionManagement(session->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -19,6 +19,9 @@ public class User {
     String password;
     @Column
     String email;
+    @Column
+    private String profileImage;
+
 
     public int getId() {
         return id;
