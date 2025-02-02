@@ -15,12 +15,11 @@ public class User {
     @Column
     String username;
     @Column
-            @JsonIgnore
     String password;
     @Column
     String email;
     @Column
-    private String profileImage;
+    private String image;
 
 
     public int getId() {
