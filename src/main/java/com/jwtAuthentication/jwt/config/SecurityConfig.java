@@ -26,7 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    String[] PUBLIC_URLS = {"/api/user/public/**","/api/v1/login", "/api/v1/register", "/api/v1/register/**", "/uploads", "/api/v1/post/image/", "/api/v1/post/image/**"};
+    String[] PUBLIC_URLS = {"/api/user/public/**","/api/v1/login", "/api/v1/register", "/api/v1/register/**", "/uploads", "/api/v1/post/image/", "/api/v1/post/image/**","/admin/register","/admin/register/**"};
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired

@@ -9,9 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,11 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-
-import static com.jwtAuthentication.jwt.controllers.AuthController.logger;
 
 @Service
 public class UserService {
@@ -66,13 +60,22 @@ public class UserService {
 
     public LoginResponse verifyUser(LoginRequest loginRequest) {
         try {
+
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
                 User user = userRepository.findByEmail(loginRequest.getEmail());
-                String token = jwtService.generateToken(loginRequest.getEmail());
-                return new LoginResponse(token, user);
+                String role=user.getRole();
+                if ("ADMIN".equals(role)) {
+                    String token = jwtService.generateToken(loginRequest.getEmail());
+                    return new LoginResponse(token, user, role);
+                } else if ("USER".equals(role)) {
+                    String token = jwtService.generateToken(loginRequest.getEmail());
+                    return new LoginResponse(token, user, role);
+                } else {
+                    throw new RuntimeException("Invalid role");
+                }
             }
         } catch (AuthenticationException e) {
             throw new RuntimeException("Failed to authenticate user");
@@ -92,4 +95,5 @@ public class UserService {
         userRepository.save(user);
          return user;
     }
+
 }

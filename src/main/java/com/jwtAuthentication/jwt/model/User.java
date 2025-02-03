@@ -20,6 +20,8 @@ public class User {
     String email;
     @Column
     private String image;
+    @Column
+    private String role;
 
 
     public int getId() {
