@@ -68,10 +68,10 @@ public class UserService {
                 User user = userRepository.findByEmail(loginRequest.getEmail());
                 String role=user.getRole();
                 if ("ADMIN".equals(role)) {
-                    String token = jwtService.generateToken(loginRequest.getEmail());
+                    String token = jwtService.generateToken(loginRequest.getEmail(),role);
                     return new LoginResponse(token, user, role);
                 } else if ("USER".equals(role)) {
-                    String token = jwtService.generateToken(loginRequest.getEmail());
+                    String token = jwtService.generateToken(loginRequest.getEmail(),role);
                     return new LoginResponse(token, user, role);
                 } else {
                     throw new RuntimeException("Invalid role");
