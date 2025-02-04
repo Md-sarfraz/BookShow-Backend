@@ -49,7 +49,6 @@ public class UserService {
                 image.transferTo(file); // Save the file
                 user.setImage(fileName);
             }
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
             // Save user to database (Assuming you have a repository)
             userRepository.save(user);
             return "Image uploaded successfully!";
@@ -67,10 +66,10 @@ public class UserService {
             if (authentication.isAuthenticated()) {
                 User user = userRepository.findByEmail(loginRequest.getEmail());
                 String role=user.getRole();
-                if ("ADMIN".equals(role)) {
+                if ("user".equals(role)) {
                     String token = jwtService.generateToken(loginRequest.getEmail(),role);
                     return new LoginResponse(token, user, role);
-                } else if ("USER".equals(role)) {
+                } else if ("admin".equals(role)) {
                     String token = jwtService.generateToken(loginRequest.getEmail(),role);
                     return new LoginResponse(token, user, role);
                 } else {
@@ -91,6 +90,9 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("user");  // Default role
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
          return user;
