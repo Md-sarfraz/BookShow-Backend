@@ -1,7 +1,11 @@
 package com.jwtAuthentication.jwt.controllers;
 
+import com.jwtAuthentication.jwt.DTO.requestDto.MovieRequestDto;
+import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
+import com.jwtAuthentication.jwt.DTO.responseDto.ApiResponse;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.service.MovieService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,5 +22,15 @@ public class MovieController {
     @DeleteMapping("/deleteMovie/{id}")
     public String deleteMovie( @PathVariable int id) {
         return movieService.deleteMovie(id);
+    }
+    @PutMapping("/update/{movieId}")
+    public ResponseEntity<ApiResponse<MovieResponseDto>> updateMovie(@RequestBody MovieRequestDto movieRequestDto,@PathVariable int movieId){
+        MovieResponseDto updatedMovie=movieService.updateMovie(movieRequestDto,movieId);
+        ApiResponse<MovieResponseDto> response=new ApiResponse<>(
+                "success",
+                "Movie updated successfully",
+                updatedMovie
+        );
+        return ResponseEntity.ok(response);
     }
 }
