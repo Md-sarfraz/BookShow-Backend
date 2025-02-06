@@ -28,7 +28,6 @@ public class MovieService {
        Optional<Movie> optionalMovie = movieRepository.findById(movieId);
        if (optionalMovie.isPresent()) {
            Movie updatedMovie = optionalMovie.get();
-           updatedMovie.setMovieId(movieRequestDto.getMovieId());
            updatedMovie.setTitle(movieRequestDto.getTitle());
            updatedMovie.setDescription(movieRequestDto.getDescription());
            updatedMovie.setGenre(movieRequestDto.getGenre());
