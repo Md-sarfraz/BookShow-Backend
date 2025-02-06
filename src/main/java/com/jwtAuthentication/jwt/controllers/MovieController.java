@@ -8,6 +8,8 @@ import com.jwtAuthentication.jwt.service.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/movie")
 public class MovieController {
@@ -33,4 +35,14 @@ public class MovieController {
         );
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/findAllMovie")
+    public List<Movie> findAllMovie(){
+        return movieService.findAllMovie();
+    }
+
+    @GetMapping("/findMovieById/{id}")
+    public Movie findMovieById(@PathVariable int id){
+        return movieService.findMovieById(id);
+    }
+
 }

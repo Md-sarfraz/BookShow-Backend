@@ -6,6 +6,7 @@ import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,6 +53,19 @@ public class MovieService {
        }
         else {
             throw new RuntimeException("Movie not found with id: " + movieId);
+       }
+    }
+
+    public List<Movie> findAllMovie() {
+       return movieRepository.findAll();
+    }
+
+    public Movie findMovieById(int id) {
+          Optional<Movie> movie = movieRepository.findById(id);
+           if(movie.isPresent()) {
+            return movie.get();
+           } else {
+               throw new RuntimeException("Movie not found with id: " + id);
        }
     }
 }
