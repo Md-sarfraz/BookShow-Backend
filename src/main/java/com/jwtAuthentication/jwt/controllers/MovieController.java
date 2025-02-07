@@ -44,5 +44,8 @@ public class MovieController {
     public Movie findMovieById(@PathVariable int id){
         return movieService.findMovieById(id);
     }
-
+@GetMapping("/searchByTitle")
+    public List<Movie> searchMoviesByTitle(String title){
+        return movieService.searchMoviesByTitle(title);
+    }
 }

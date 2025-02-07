@@ -68,4 +68,8 @@ public class MovieService {
                throw new RuntimeException("Movie not found with id: " + id);
        }
     }
+
+    public List<Movie> searchMoviesByTitle(String title) {
+        return movieRepository.findByTitleContainingIgnoreCase(title);
+    }
 }
