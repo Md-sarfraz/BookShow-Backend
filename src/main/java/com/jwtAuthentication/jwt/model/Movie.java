@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Data
 @ToString
@@ -29,12 +32,17 @@ public class Movie {
     private String language;
 
     @Column
-    private String releaseDate;
+    private LocalDate releaseDate;
 
     @Column
     private String postUrl;
 
     @Column
     private String rating;
+    @Column
 
+    private String director;
+
+    @Column
+    private List<String>cast;
 }

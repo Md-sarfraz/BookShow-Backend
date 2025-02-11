@@ -5,7 +5,9 @@ import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ public class MovieService {
 
     public Movie createMovie(Movie movie) {
         return movieRepository.save(movie);
+
     }
 
     public String deleteMovie(int id) {
@@ -34,7 +37,7 @@ public class MovieService {
            updatedMovie.setGenre(movieRequestDto.getGenre());
            updatedMovie.setDuration(movieRequestDto.getDuration());
            updatedMovie.setLanguage(movieRequestDto.getLanguage());
-           updatedMovie.setReleaseDate(movieRequestDto.getReleaseDate());
+           updatedMovie.setReleaseDate(LocalDate.parse(movieRequestDto.getReleaseDate()));
            updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
            updatedMovie.setRating(movieRequestDto.getRating());
            movieRepository.save(updatedMovie);
@@ -46,7 +49,7 @@ public class MovieService {
            movieResponseDto.setGenre(updatedMovie.getGenre());
            movieResponseDto.setDuration(updatedMovie.getDuration());
            movieResponseDto.setLanguage(updatedMovie.getLanguage());
-           movieResponseDto.setReleaseDate(updatedMovie.getReleaseDate());
+           movieResponseDto.setReleaseDate(String.valueOf(updatedMovie.getReleaseDate()));
            movieResponseDto.setPostUrl(updatedMovie.getPostUrl());
            movieResponseDto.setRating(updatedMovie.getRating());
            return movieResponseDto;
@@ -69,7 +72,24 @@ public class MovieService {
        }
     }
 
-    public List<Movie> searchMoviesByTitle(String title) {
+    public List<Movie> searchMoviesByTitle(@RequestParam String title) {
         return movieRepository.findByTitleContainingIgnoreCase(title);
     }
+
+    public List<Movie> filterByGenre(String genre) {
+        return movieRepository.findByGenre(genre);
+    }
+
+    public List<Movie> filterByLanguage(String language) {
+        return movieRepository.findByLanguage(language);
+    }
+
+//    public List<Movie> filterByReleaseDate(LocalDate date) {
+//         return movieRepository.findByReleaseDateAfter(date);
+//    }
+//
+//
+//    public List<Movie> filterByRating(Double rating) {
+//        return movieRepository.findByRatingGreaterThanEqual(rating);
+//    }
 }

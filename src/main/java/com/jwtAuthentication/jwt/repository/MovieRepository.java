@@ -14,12 +14,12 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     List<Movie> findByTitleContainingIgnoreCase(String title);
 
     // Filter by genre
-//    List<Movie> findByGenre(String genre);
+    List<Movie> findByGenre(String genre);
 //
 //    // Filter by language
-//    List<Movie> findByLanguage(String language);
-//
-//    // Find movies released after a specific date
+    List<Movie> findByLanguage(String language);
+
+    // Find movies released after a specific date
 //    List<Movie> findByReleaseDateAfter(LocalDate date);
 //
 //    // Find movies with rating greater than or equal to given rating
