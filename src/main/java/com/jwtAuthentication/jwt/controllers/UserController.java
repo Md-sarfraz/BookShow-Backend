@@ -21,8 +21,9 @@ public class UserController {
         return "User created successfully";
     }
 
+    @CrossOrigin("*")
     @PostMapping(value = "/public/uploadImg/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> registerUser(@RequestParam("image") MultipartFile file, @PathVariable int id) {
+    public ResponseEntity<?> registerUser(@RequestPart("image") MultipartFile file, @PathVariable int id) {
         try {
 
             String responseMessage = userService.uploadImg(id, file);
