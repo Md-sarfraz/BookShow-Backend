@@ -43,6 +43,13 @@ public class Movie {
 
     private String director;
 
+    @ElementCollection
+    @CollectionTable(name = "movie_cast", joinColumns = @JoinColumn(name = "movie_id"))
     @Column
-    private List<String>cast;
+    private List<String>castMember;
+
+
+    @ManyToOne
+    @JoinColumn
+    private Theater theater;
 }

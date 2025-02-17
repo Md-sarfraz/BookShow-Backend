@@ -25,7 +25,6 @@ public class UserController {
     @PostMapping(value = "/public/uploadImg/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<?> registerUser(@RequestPart("image") MultipartFile file, @PathVariable int id) {
         try {
-
             String responseMessage = userService.uploadImg(id, file);
             return ResponseEntity.ok(responseMessage);
         } catch (Exception e) {

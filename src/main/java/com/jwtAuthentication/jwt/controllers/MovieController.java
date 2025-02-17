@@ -18,9 +18,10 @@ public class MovieController {
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
-    @PostMapping("/createMovie")
-    public Movie createMovie(@RequestBody Movie movie) {
-        return movieService.createMovie(movie);
+    @PostMapping("/createMovie/{theaterId")
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, @PathVariable int theaterId) {
+        Movie savedMovie= movieService.saveMovie(movie,theaterId);
+        return ResponseEntity.ok(savedMovie);
     }
     @DeleteMapping("/deleteMovie/{id}")
     public String deleteMovie( @PathVariable int id) {

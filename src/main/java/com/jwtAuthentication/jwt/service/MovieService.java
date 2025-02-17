@@ -3,7 +3,9 @@ package com.jwtAuthentication.jwt.service;
 import com.jwtAuthentication.jwt.DTO.requestDto.MovieRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
 import com.jwtAuthentication.jwt.model.Movie;
+import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
+import com.jwtAuthentication.jwt.repository.TheaterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -13,12 +15,16 @@ import java.util.Optional;
 
 @Service
 public class MovieService {
+    private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository,TheaterRepository theaterRepository) {
         this.movieRepository = movieRepository;
+        this.theaterRepository = theaterRepository;
     }
 
-    public Movie createMovie(Movie movie) {
+    public Movie saveMovie(Movie movie,int theaterId) {
+        Theater theater=theaterRepository.findById(theaterId).orElseThrow(()->new RuntimeException("Theater not found"+theaterId));
+        movie.setTheater(theater);
         return movieRepository.save(movie);
 
     }
