@@ -32,7 +32,8 @@ public class SecurityConfig {
             "/api/v1/register",
             "/api/movie/",
             "/api/movie/**",
-            "/api/movie/update/**"
+            "/api/movie/update/**",
+            "/api/theater/**"
     };
     @Autowired
     private UserDetailsService userDetailsService;
