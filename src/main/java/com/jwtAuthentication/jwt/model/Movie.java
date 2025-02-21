@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -51,5 +52,6 @@ public class Movie {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private Theater theater;
 }
