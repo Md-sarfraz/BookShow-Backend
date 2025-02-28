@@ -51,24 +51,10 @@ public class MovieController {
         return movieService.searchMoviesByTitle(title);
     }
 
-
-    @GetMapping("/filter/genre")
-    public ResponseEntity<List<Movie>> filterByGenre(@RequestParam String genre) {
-        return ResponseEntity.ok(movieService.filterByGenre(genre));
+    @GetMapping("/filter")
+    public List<Movie> filterMovies(@RequestParam(required = false) String language,
+                                    @RequestParam(required = false) String genre) {
+        return movieService.filterMovies(language, genre);
     }
-
-    // Filter by language
-    @GetMapping("/filter/language")
-    public ResponseEntity<List<Movie>> filterByLanguage(@RequestParam String language) {
-        return ResponseEntity.ok(movieService.filterByLanguage(language));
-    }
-//@GetMapping("/filter/releaseDate")
-//    public ResponseEntity<List<Movie>>filterByReleaseDate(@RequestParam String date) {
-//        LocalDate releaseDate = LocalDate.parse(date);
-//        return ResponseEntity.ok(movieService.filterByReleaseDate(releaseDate));
-//    }
-//@GetMapping("/filter/rating")
-//    public ResponseEntity<List<Movie>> filterByRating(@RequestParam Double rating) {
-//        return ResponseEntity.ok(movieService.filterByRating(rating));
-//    }
+//
 }

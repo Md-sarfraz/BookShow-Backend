@@ -90,6 +90,20 @@ public class MovieService {
         return movieRepository.findByLanguage(language);
     }
 
+
+
+    public List<Movie> filterMovies(String language, String genre) {
+        if (language != null && genre != null) {
+            return movieRepository.findByLanguageAndGenre(language, genre);
+        } else if (language != null) {
+            return movieRepository.findByLanguage(language);
+        } else if (genre != null) {
+            return movieRepository.findByGenre(genre);
+        } else {
+            return movieRepository.findAll();
+        }
+    }
+
 //    public List<Movie> filterByReleaseDate(LocalDate date) {
 //         return movieRepository.findByReleaseDateAfter(date);
 //    }

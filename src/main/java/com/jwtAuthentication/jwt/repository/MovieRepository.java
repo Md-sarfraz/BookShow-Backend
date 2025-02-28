@@ -18,6 +18,7 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
 //
 //    // Filter by language
     List<Movie> findByLanguage(String language);
+    List<Movie> findByLanguageAndGenre(String language, String genre);
 
     // Find movies released after a specific date
 //    List<Movie> findByReleaseDateAfter(LocalDate date);
