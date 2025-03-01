@@ -27,6 +27,9 @@ public class Movie {
     private String genre;
 
     @Column
+    private String format;
+
+    @Column
     private String duration;
 
     @Column

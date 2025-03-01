@@ -92,17 +92,26 @@ public class MovieService {
 
 
 
-    public List<Movie> filterMovies(String language, String genre) {
-        if (language != null && genre != null) {
+    public List<Movie> filterMovies(String language, String genre, String format) {
+        if (language != null && genre != null && format != null) {
+            return movieRepository.findByLanguageAndGenreAndFormat(language, genre, format);
+        } else if (language != null && genre != null) {
             return movieRepository.findByLanguageAndGenre(language, genre);
+        } else if (language != null && format != null) {
+            return movieRepository.findByLanguageAndFormat(language, format);
+        } else if (genre != null && format != null) {
+            return movieRepository.findByGenreAndFormat(genre, format);
         } else if (language != null) {
             return movieRepository.findByLanguage(language);
         } else if (genre != null) {
             return movieRepository.findByGenre(genre);
+        } else if (format != null) {
+            return movieRepository.findByFormat(format);
         } else {
             return movieRepository.findAll();
         }
     }
+
 
 //    public List<Movie> filterByReleaseDate(LocalDate date) {
 //         return movieRepository.findByReleaseDateAfter(date);

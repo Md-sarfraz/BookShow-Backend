@@ -53,8 +53,9 @@ public class MovieController {
 
     @GetMapping("/filter")
     public List<Movie> filterMovies(@RequestParam(required = false) String language,
-                                    @RequestParam(required = false) String genre) {
-        return movieService.filterMovies(language, genre);
+                                    @RequestParam(required = false) String genre,
+                                    @RequestParam(required = false) String format) {
+        return movieService.filterMovies(language, genre,format);
     }
 //
 }
