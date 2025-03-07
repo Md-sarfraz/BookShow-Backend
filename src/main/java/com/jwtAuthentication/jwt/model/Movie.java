@@ -2,8 +2,11 @@ package com.jwtAuthentication.jwt.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+//import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.ToString;
+//import jakarta.validation.constraints.Pattern;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +21,7 @@ public class Movie {
     private int movieId;
 
     @Column
+//    @NotBlank(message = "title is required")
     private String title;
 
     @Column
@@ -46,6 +50,11 @@ public class Movie {
     @Column
 
     private String director;
+
+//    @NotBlank(message = "Trailer link is required")
+//    @Pattern(regexp = "^(https?://)?(www\\.)?(youtube\\.com|youtu\\.?be)/.+$",
+//            message = "Invalid YouTube URL format")
+    private String trailer;
 
     @ElementCollection
     @CollectionTable(name = "movie_cast", joinColumns = @JoinColumn(name = "movie_id"))

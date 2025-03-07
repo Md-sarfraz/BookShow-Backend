@@ -30,8 +30,14 @@ public class MovieService {
     }
 
     public String deleteMovie(int id) {
-        movieRepository.deleteById(id);
-        return"movie deleted successfully "+id;
+        Optional<Movie> movie = movieRepository.findById(id);
+
+        if (movie.isPresent()) {
+            movieRepository.deleteById(id);
+            return "Movie deleted successfully: " + id;
+        } else {
+            return "Movie not found with ID: " + id;
+        }
     }
 
     public MovieResponseDto updateMovie(MovieRequestDto movieRequestDto, int movieId) {
