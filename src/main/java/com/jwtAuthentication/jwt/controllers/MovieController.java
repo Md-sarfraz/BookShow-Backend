@@ -5,10 +5,11 @@ import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.ApiResponse;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.service.MovieService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -18,11 +19,19 @@ public class MovieController {
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
-    @PostMapping("/createMovie/{theaterId}")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie, @PathVariable int theaterId) {
-        Movie savedMovie= movieService.saveMovie(movie,theaterId);
-        return ResponseEntity.ok(savedMovie);
+    @PostMapping(
+            value = "/createMovie/{theaterId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<String> createMovie(
+            @RequestPart("movie") Movie movie,
+            @RequestPart("file") MultipartFile file,
+            @PathVariable int theaterId
+    ) {
+        System.out.println("filename: " + file.getName());
+        return ResponseEntity.ok(file.getName());
     }
+
     @DeleteMapping("/deleteMovie/{id}")
     public String deleteMovie( @PathVariable int id) {
         return movieService.deleteMovie(id);

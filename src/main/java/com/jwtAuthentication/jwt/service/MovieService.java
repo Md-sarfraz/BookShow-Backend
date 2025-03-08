@@ -8,7 +8,9 @@ import com.jwtAuthentication.jwt.repository.MovieRepository;
 import com.jwtAuthentication.jwt.repository.TheaterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,16 +19,34 @@ import java.util.Optional;
 public class MovieService {
     private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
-    public MovieService(MovieRepository movieRepository,TheaterRepository theaterRepository) {
+    private final CloudinaryService cloudinaryService;
+    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository, CloudinaryService cloudinaryService) {
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
-    public Movie saveMovie(Movie movie,int theaterId) {
+    public Movie saveMovie(Movie movie, MultipartFile file, int theaterId) {
         Theater theater=theaterRepository.findById(theaterId).orElseThrow(()->new RuntimeException("Theater not found"+theaterId));
         movie.setTheater(theater);
+        try {
+            String imageUrl=uploadImg(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return movieRepository.save(movie);
 
+
+    }
+
+    public String uploadImg(MultipartFile file) throws IOException {
+        String imageUrl = cloudinaryService.uploadImage(file);
+        if (imageUrl.isEmpty()) {
+
+            throw new RuntimeException("Failed to upload image to Cloudinary");
+        }
+
+        return imageUrl;
     }
 
     public String deleteMovie(int id) {
