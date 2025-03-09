@@ -33,7 +33,9 @@ public class SecurityConfig {
             "/api/movie/",
             "/api/movie/**",
             "/api/movie/update/**",
-            "/api/theater/**"
+            "/api/theater/**",
+            "/cloudinary/upload",
+            "/cloudinary/upload/**"
     };
     @Autowired
     private UserDetailsService userDetailsService;
@@ -96,4 +98,6 @@ public class SecurityConfig {
         bean.setOrder(-110);
         return bean;
     }
+
+
 }

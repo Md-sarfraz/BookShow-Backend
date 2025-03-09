@@ -19,35 +19,33 @@ import java.util.Optional;
 public class MovieService {
     private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
-    private final CloudinaryService cloudinaryService;
-    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository, CloudinaryService cloudinaryService) {
+    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository) {
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
-        this.cloudinaryService = cloudinaryService;
     }
 
-    public Movie saveMovie(Movie movie, MultipartFile file, int theaterId) {
-        Theater theater=theaterRepository.findById(theaterId).orElseThrow(()->new RuntimeException("Theater not found"+theaterId));
-        movie.setTheater(theater);
-        try {
-            String imageUrl=uploadImg(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return movieRepository.save(movie);
+//    public Movie saveMovie(Movie movie, MultipartFile file, int theaterId) {
+//        Theater theater=theaterRepository.findById(theaterId).orElseThrow(()->new RuntimeException("Theater not found"+theaterId));
+//        movie.setTheater(theater);
+//        try {
+//            String imageUrl=uploadImg(file);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return movieRepository.save(movie);
+//
+//
+//    }
 
-
-    }
-
-    public String uploadImg(MultipartFile file) throws IOException {
-        String imageUrl = cloudinaryService.uploadImage(file);
-        if (imageUrl.isEmpty()) {
-
-            throw new RuntimeException("Failed to upload image to Cloudinary");
-        }
-
-        return imageUrl;
-    }
+//    public String uploadImg(MultipartFile file) throws IOException {
+//        String imageUrl = cloudinaryService.uploadImage(file);
+//        if (imageUrl.isEmpty()) {
+//
+//            throw new RuntimeException("Failed to upload image to Cloudinary");
+//        }
+//
+//        return imageUrl;
+//    }
 
     public String deleteMovie(int id) {
         Optional<Movie> movie = movieRepository.findById(id);
