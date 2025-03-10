@@ -40,7 +40,7 @@ public class Movie {
     private String language;
 
     @Column
-    private LocalDate releaseDate;
+    private String releaseDate;
 
     @Column
     private String postUrl;

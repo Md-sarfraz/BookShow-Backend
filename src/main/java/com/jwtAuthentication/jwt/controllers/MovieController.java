@@ -19,17 +19,43 @@ public class MovieController {
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
-    @PostMapping(
-            value = "/createMovie/{theaterId}",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+//    @PostMapping(
+//            value = "/createMovie/{theaterId}",
+//            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+//    )
+//    public ResponseEntity<String> createMovie(
+//            @RequestPart("movie") Movie movie,
+//            @RequestPart("file") MultipartFile file,
+//            @PathVariable int theaterId
+//    ) {
+//        System.out.println("filename: " + file.getName());
+//        return ResponseEntity.ok(file.getName());
+//    }
+
+    @PostMapping("/createMovie")
+    public ResponseEntity<Movie> addMovie(
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("genre") String genre,
+            @RequestParam("format") String format,
+            @RequestParam("duration") String duration,
+            @RequestParam("language") String language,
+            @RequestParam("releaseDate") String releaseDate,
+            @RequestParam("postUrl") String postUrl,
+            @RequestParam("rating") String rating,
+            @RequestParam("director") String director,
+            @RequestParam("trailer") String trailer,
+            @RequestParam("image") MultipartFile imageFile,
+            @RequestParam("theaterId") int theaterId
     )
-    public ResponseEntity<String> createMovie(
-            @RequestPart("movie") Movie movie,
-            @RequestPart("file") MultipartFile file,
-            @PathVariable int theaterId
-    ) {
-        System.out.println("filename: " + file.getName());
-        return ResponseEntity.ok(file.getName());
+    {
+        try{
+           Movie savedMovie=movieService.saveMovie(title, description, genre, format, duration, language, releaseDate,postUrl, rating, director, trailer, imageFile, theaterId);
+           return ResponseEntity.ok(savedMovie);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @DeleteMapping("/deleteMovie/{id}")

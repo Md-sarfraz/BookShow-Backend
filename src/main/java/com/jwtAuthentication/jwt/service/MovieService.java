@@ -1,5 +1,7 @@
 package com.jwtAuthentication.jwt.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.jwtAuthentication.jwt.DTO.requestDto.MovieRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
 import com.jwtAuthentication.jwt.model.Movie;
@@ -13,39 +15,43 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class MovieService {
     private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
-    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository) {
+    private final Cloudinary cloudinary;
+    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository, Cloudinary cloudinary) {
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
+        this.cloudinary = cloudinary;
     }
 
-//    public Movie saveMovie(Movie movie, MultipartFile file, int theaterId) {
-//        Theater theater=theaterRepository.findById(theaterId).orElseThrow(()->new RuntimeException("Theater not found"+theaterId));
-//        movie.setTheater(theater);
-//        try {
-//            String imageUrl=uploadImg(file);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return movieRepository.save(movie);
-//
-//
-//    }
+    public Movie saveMovie(String title, String description, String genre, String format, String duration, String language, String releaseDate, String postUrl, String rating, String director, String trailer, MultipartFile imageFile, int theaterId) throws IOException {
+        Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
+        String imageUrl = uploadResult.get("url").toString();
 
-//    public String uploadImg(MultipartFile file) throws IOException {
-//        String imageUrl = cloudinaryService.uploadImage(file);
-//        if (imageUrl.isEmpty()) {
-//
-//            throw new RuntimeException("Failed to upload image to Cloudinary");
-//        }
-//
-//        return imageUrl;
-//    }
+        Theater theater = theaterRepository.findById(theaterId)
+                .orElseThrow(() -> new RuntimeException("Theater not found"));
+
+        Movie movie=new Movie();
+        movie.setTitle(title);
+        movie.setDescription(description);
+        movie.setGenre(genre);
+        movie.setFormat(format);
+        movie.setDuration(duration);
+        movie.setLanguage(language);
+        movie.setReleaseDate(String.valueOf(LocalDate.parse(releaseDate)));
+        movie.setPostUrl(imageUrl);
+        movie.setRating(rating);
+        movie.setDirector(director);
+        movie.setTrailer(trailer);
+        movie.setTheater(theater);
+        return movieRepository.save(movie);
+    }
+
 
     public String deleteMovie(int id) {
         Optional<Movie> movie = movieRepository.findById(id);
@@ -67,7 +73,7 @@ public class MovieService {
            updatedMovie.setGenre(movieRequestDto.getGenre());
            updatedMovie.setDuration(movieRequestDto.getDuration());
            updatedMovie.setLanguage(movieRequestDto.getLanguage());
-           updatedMovie.setReleaseDate(LocalDate.parse(movieRequestDto.getReleaseDate()));
+           updatedMovie.setReleaseDate(String.valueOf(LocalDate.parse(movieRequestDto.getReleaseDate())));
            updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
            updatedMovie.setRating(movieRequestDto.getRating());
            movieRepository.save(updatedMovie);
@@ -135,6 +141,8 @@ public class MovieService {
             return movieRepository.findAll();
         }
     }
+
+
 
 
 //    public List<Movie> filterByReleaseDate(LocalDate date) {
