@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString
+@ToString(exclude = "theater")
 public class Movie {
     @Id
     @Column
@@ -63,7 +63,7 @@ public class Movie {
 
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "theater_id")
     @JsonIgnore
     private Theater theater;
 }

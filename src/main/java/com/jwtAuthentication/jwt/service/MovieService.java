@@ -29,28 +29,57 @@ public class MovieService {
         this.cloudinary = cloudinary;
     }
 
-    public Movie saveMovie(String title, String description, String genre, String format, String duration, String language, String releaseDate, String postUrl, String rating, String director, String trailer, MultipartFile imageFile, int theaterId) throws IOException {
+//    public Movie saveMovie(String title, String description, String genre, String format, String duration, String language, String releaseDate, String postUrl, String rating, String director, String trailer, MultipartFile imageFile, int theaterId) throws IOException {
+//        Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
+//        String imageUrl = uploadResult.get("url").toString();
+//
+//        Theater theater = theaterRepository.findById(theaterId)
+//                .orElseThrow(() -> new RuntimeException("Theater not found"));
+//
+//        Movie movie=new Movie();
+//        movie.setTitle(title);
+//        movie.setDescription(description);
+//        movie.setGenre(genre);
+//        movie.setFormat(format);
+//        movie.setDuration(duration);
+//        movie.setLanguage(language);
+//        movie.setReleaseDate(String.valueOf(LocalDate.parse(releaseDate)));
+//        movie.setPostUrl(imageUrl);
+//        movie.setRating(rating);
+//        movie.setDirector(director);
+//        movie.setTrailer(trailer);
+//        movie.setTheater(theater);
+//        return movieRepository.save(movie);
+//    }
+
+    public Movie saveMovie(Movie movie, MultipartFile imageFile) throws IOException {
+        // Upload image to Cloudinary
         Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
-        String imageUrl = uploadResult.get("url").toString();
 
-        Theater theater = theaterRepository.findById(theaterId)
-                .orElseThrow(() -> new RuntimeException("Theater not found"));
-
-        Movie movie=new Movie();
-        movie.setTitle(title);
-        movie.setDescription(description);
-        movie.setGenre(genre);
-        movie.setFormat(format);
-        movie.setDuration(duration);
-        movie.setLanguage(language);
-        movie.setReleaseDate(String.valueOf(LocalDate.parse(releaseDate)));
+        // Get Cloudinary image URL
+        String imageUrl = uploadResult.get("secure_url").toString();
         movie.setPostUrl(imageUrl);
-        movie.setRating(rating);
-        movie.setDirector(director);
-        movie.setTrailer(trailer);
-        movie.setTheater(theater);
+
+        if (movie.getTheater() != null && movie.getTheater().getId() > 0) {
+            System.out.println("i am in the if");
+            Theater theater = theaterRepository.findById(movie.getTheater().getId())
+                    .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + movie.getTheater().getId()));
+            movie.setTheater(theater);
+        }
+
+//        int theaterId = movie.getTheater().getId();
+        System.out.println(movie);
+        // Find the Theater from DB
+//        Theater theater = theaterRepository.findById(theaterId)
+//                .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + theaterId));
+
+        // Set the Theater in Movie
+//        movie.setTheater(theater);
+        // Save movie to the database
         return movieRepository.save(movie);
     }
+
+
 
 
     public String deleteMovie(int id) {
