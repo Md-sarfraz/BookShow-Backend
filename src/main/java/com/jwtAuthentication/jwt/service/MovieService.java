@@ -52,30 +52,24 @@ public class MovieService {
 //        return movieRepository.save(movie);
 //    }
 
-    public Movie saveMovie(Movie movie, MultipartFile imageFile) throws IOException {
-        // Upload image to Cloudinary
-        Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
-
-        // Get Cloudinary image URL
-        String imageUrl = uploadResult.get("secure_url").toString();
+    public Movie saveMovie(Movie movie, MultipartFile imageFile, MultipartFile backgroundImageFile) throws IOException {
+        // Upload main image to Cloudinary
+        Map uploadResultMain = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
+        String imageUrl = uploadResultMain.get("secure_url").toString();
         movie.setPostUrl(imageUrl);
 
+        // Upload background image to Cloudinary
+        Map uploadResultBg = cloudinary.uploader().upload(backgroundImageFile.getBytes(), ObjectUtils.emptyMap());
+        String backgroundImageUrl = uploadResultBg.get("secure_url").toString();
+        movie.setBackgroundImageUrl(backgroundImageUrl);  // Add a new field in your Movie entity
+
+        // Associate theater if provided
         if (movie.getTheater() != null && movie.getTheater().getId() > 0) {
-            System.out.println("i am in the if");
             Theater theater = theaterRepository.findById(movie.getTheater().getId())
                     .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + movie.getTheater().getId()));
             movie.setTheater(theater);
         }
 
-//        int theaterId = movie.getTheater().getId();
-        System.out.println(movie);
-        // Find the Theater from DB
-//        Theater theater = theaterRepository.findById(theaterId)
-//                .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + theaterId));
-
-        // Set the Theater in Movie
-//        movie.setTheater(theater);
-        // Save movie to the database
         return movieRepository.save(movie);
     }
 

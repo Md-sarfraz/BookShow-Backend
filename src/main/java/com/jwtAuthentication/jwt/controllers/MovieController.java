@@ -25,32 +25,6 @@ public class MovieController {
         this.movieMapper = movieMapper;
     }
 
-//    @PostMapping("/createMovie")
-//    public ResponseEntity<Movie> addMovie(
-//            @RequestParam("title") String title,
-//            @RequestParam("description") String description,
-//            @RequestParam("genre") String genre,
-//            @RequestParam("format") String format,
-//            @RequestParam("duration") String duration,
-//            @RequestParam("language") String language,
-//            @RequestParam("releaseDate") String releaseDate,
-//            @RequestParam("postUrl") String postUrl,
-//            @RequestParam("rating") String rating,
-//            @RequestParam("director") String director,
-//            @RequestParam("trailer") String trailer,
-//            @RequestParam("image") MultipartFile imageFile,
-//            @RequestParam("theaterId") int theaterId
-//    )
-//    {
-//        try{
-//           Movie savedMovie=movieService.saveMovie(title, description, genre, format, duration, language, releaseDate,postUrl, rating, director, trailer, imageFile, theaterId);
-//           return ResponseEntity.ok(savedMovie);
-//        }
-//        catch (Exception e) {
-//            return ResponseEntity.status(500).body(null);
-//        }
-//    }
-
 
     @Autowired
     private ObjectMapper objectMapper; // For manual JSON parsing
@@ -74,29 +48,29 @@ public class MovieController {
 //            return ResponseEntity.status(500).body(null);
 //        }
 //    }
-    @PostMapping("/createMovie")
-    public ResponseEntity<Movie> addMovie(
-            @RequestPart("movie") String movieJson,
-            @RequestPart("image") MultipartFile imageFile) {
-        try {
-            // Convert movie JSON String to Movie object
-            System.out.println("this is movie" + movieJson);
+@PostMapping("/createMovie")
+public ResponseEntity<Movie> addMovie(
+        @RequestPart("movie") String movieJson,
+        @RequestPart("image") MultipartFile imageFile,
+        @RequestPart("backgroundImage") MultipartFile backgroundImageFile) {
+    try {
+        // Convert movie JSON String to Movie object
+        System.out.println("this is movie" + movieJson);
 
-            MovieRequestDto movie = objectMapper.readValue(movieJson, MovieRequestDto.class);
+        MovieRequestDto movieDto = objectMapper.readValue(movieJson, MovieRequestDto.class);
 
-//
+        // Convert DTO to Entity
+        Movie mapped = movieMapper.toEntity(movieDto);
 
-            // Save movie with image
-            Movie mapped = movieMapper.toEntity(movie);
-//            System.out.println("This is movie mapped" +mapped);
-            Movie savedMovie = movieService.saveMovie(mapped, imageFile);
-            return ResponseEntity.ok(savedMovie);
-//            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
-        }
+        // Save movie with images
+        Movie savedMovie = movieService.saveMovie(mapped, imageFile, backgroundImageFile);
+        return ResponseEntity.ok(savedMovie);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(500).body(null);
     }
+}
+
 
     @DeleteMapping("/deleteMovie/{id}")
     public String deleteMovie( @PathVariable int id) {

@@ -46,6 +46,10 @@ public class Movie {
     private String postUrl;
 
     @Column
+    private String backgroundImageUrl;
+
+
+    @Column
     private String rating;
     @Column
 

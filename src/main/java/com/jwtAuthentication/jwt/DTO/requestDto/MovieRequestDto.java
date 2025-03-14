@@ -18,6 +18,7 @@ public class MovieRequestDto {
     private String language;
     private String releaseDate;
     private String postUrl;
+    private String backgroundImageUrl;
     private String rating;
     private String director;  // Added
     private String trailer;  // Added
