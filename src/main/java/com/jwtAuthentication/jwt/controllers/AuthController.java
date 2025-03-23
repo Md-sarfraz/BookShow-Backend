@@ -1,7 +1,9 @@
 package com.jwtAuthentication.jwt.controllers;
 
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
+import com.jwtAuthentication.jwt.DTO.requestDto.UserRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
+import com.jwtAuthentication.jwt.mapper.UserMapper;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.service.DocumentService;
 import com.jwtAuthentication.jwt.service.UserService;
@@ -27,7 +29,8 @@ public class AuthController {
     @Autowired
     private DocumentService documentService;
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
+    public User registerUser(@RequestBody UserRequestDto userRequestDto) {
+        User user= UserMapper.toEntity(userRequestDto);
         return userService.saveUser(user);
     }
 

@@ -19,6 +19,14 @@ public class User {
     @Column
     String email;
     @Column
+    String firstName;
+    @Column
+    String lastName;
+    @Column
+    String DOB;
+    @Column
+    String Bio;
+    @Column
     private String image;
     @Column
     private String role;

@@ -1,5 +1,8 @@
 package com.jwtAuthentication.jwt.controllers;
 
+import com.jwtAuthentication.jwt.DTO.requestDto.UserRequestDto;
+import com.jwtAuthentication.jwt.mapper.UserMapper;
+import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +18,16 @@ public class UserController {
     public static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired
     private UserService userService;
-
-    @PostMapping("/post")
-    public String postUser() {
-        return "User created successfully";
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id){
+        String response = userService.deleteUser(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    @CrossOrigin("*")
-    @PostMapping(value = "/public/uploadImg/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> registerUser(@RequestPart("image") MultipartFile file, @PathVariable int id) {
-        try {
-            String responseMessage = userService.uploadImg(id, file);
-            return ResponseEntity.ok(responseMessage);
-        } catch (Exception e) {
-            logger.error("Unexpected error: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
-        }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> editUser(@PathVariable int id, @RequestBody UserRequestDto userRequestDto){
+        User user= UserMapper.toEntity(userRequestDto);
+        User updatedUser = userService.updateUser(id,user);
+        return ResponseEntity.ok(updatedUser);
     }
-
 
 }

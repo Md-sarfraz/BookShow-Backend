@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,29 +34,8 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    public String uploadImg(int id, MultipartFile image) {
-        User user=userRepository.findById(id).orElseThrow(()-> new RuntimeException("No such user"));
-        try {
-            // Handle Profile Image
-            if (image != null && !image.isEmpty()) {
-                // Create the directory if it doesn't exist
-                Files.createDirectories(Paths.get(uploadDir)); // Will create C:/myapp/uploads/
-                String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-                File file = new File(uploadDir + fileName);
-                image.transferTo(file); // Save the file
-                user.setImage(fileName);
-            }
-            // Save user to database (Assuming you have a repository)
-            userRepository.save(user);
-            return "Image uploaded successfully!";
-        } catch (IOException e) {
-            return "Failed to upload: " + e.getMessage();
-        }
-    }
 
     public LoginResponse verifyUser(LoginRequest loginRequest) {
         try {
@@ -65,12 +45,12 @@ public class UserService {
 
             if (authentication.isAuthenticated()) {
                 User user = userRepository.findByEmail(loginRequest.getEmail());
-                String role=user.getRole();
+                String role = user.getRole();
                 if ("user".equals(role)) {
-                    String token = jwtService.generateToken(loginRequest.getEmail(),role);
+                    String token = jwtService.generateToken(loginRequest.getEmail(), role);
                     return new LoginResponse(token, user, role);
                 } else if ("admin".equals(role)) {
-                    String token = jwtService.generateToken(loginRequest.getEmail(),role);
+                    String token = jwtService.generateToken(loginRequest.getEmail(), role);
                     return new LoginResponse(token, user, role);
                 } else {
                     throw new RuntimeException("Invalid role");
@@ -95,7 +75,35 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-         return user;
+        return user;
     }
 
+    public String deleteUser(int id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user != null) {
+            userRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("User not found with id: " + id);
+        }
+        return "User deleted successfully " + id;
+    }
+
+    public User updateUser(int id, User user) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User updatedUser = optionalUser.get();
+            updatedUser.setUsername(user.getUsername());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setPassword(user.getPassword());
+            updatedUser.setFirstName(user.getFirstName());
+            updatedUser.setLastName(user.getLastName());
+            updatedUser.setDOB(user.getDOB());
+            updatedUser.setBio(user.getBio());
+            updatedUser.setImage(user.getImage());
+            updatedUser.setRole(user.getRole());
+            return userRepository.save(updatedUser);
+        } else {
+            throw new RuntimeException("User not found with id: " + id);
+        }
+    }
 }

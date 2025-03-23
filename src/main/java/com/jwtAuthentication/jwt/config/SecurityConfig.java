@@ -34,8 +34,8 @@ public class SecurityConfig {
             "/api/movie/**",
             "/api/movie/update/**",
             "/api/theater/**",
-//            "/cloudinary/upload",
-//            "/cloudinary/upload/**"
+            "/cloudinary/upload",
+            "/cloudinary/upload/**"
     };
     @Autowired
     private UserDetailsService userDetailsService;

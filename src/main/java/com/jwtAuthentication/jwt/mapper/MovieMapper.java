@@ -14,12 +14,6 @@ import java.util.stream.Collectors;
 @ToString
 public class MovieMapper {
 
-    /**
-     * Maps MovieRequestDto to Movie entity
-     * 
-     * @param dto the MovieRequestDto to convert
-     * @return the Movie entity
-     */
     public Movie toEntity(MovieRequestDto dto) {
         if (dto == null) {
             return null;
@@ -49,13 +43,7 @@ public class MovieMapper {
         
         return movie;
     }
-    
-    /**
-     * Maps Movie entity to MovieRequestDto
-     * 
-     * @param entity the Movie entity to convert
-     * @return the MovieRequestDto
-     */
+
     public MovieRequestDto toDto(Movie entity) {
         if (entity == null) {
             return null;

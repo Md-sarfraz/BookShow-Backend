@@ -7,5 +7,5 @@ import java.util.Map;
 
 @Service
 public interface CloudinaryImageService {
-    public Map upload(MultipartFile file);
+    public Map upload(MultipartFile file,int id);
 }
