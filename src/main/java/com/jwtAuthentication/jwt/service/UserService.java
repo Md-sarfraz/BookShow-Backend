@@ -1,40 +1,39 @@
 package com.jwtAuthentication.jwt.service;
 
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
+import com.jwtAuthentication.jwt.DTO.requestDto.UserRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.controllers.AuthController;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
+    public UserService(JwtService jwtService, PasswordEncoder passwordEncoder, UserRepository userRepository, AuthenticationManager authenticationManager) {
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+    }
 
 
     public LoginResponse verifyUser(LoginRequest loginRequest) {
@@ -88,22 +87,26 @@ public class UserService {
         return "User deleted successfully " + id;
     }
 
-    public User updateUser(int id, User user) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User updatedUser = optionalUser.get();
-            updatedUser.setUsername(user.getUsername());
-            updatedUser.setEmail(user.getEmail());
-            updatedUser.setPassword(user.getPassword());
-            updatedUser.setFirstName(user.getFirstName());
-            updatedUser.setLastName(user.getLastName());
-            updatedUser.setDOB(user.getDOB());
-            updatedUser.setBio(user.getBio());
-            updatedUser.setImage(user.getImage());
-            updatedUser.setRole(user.getRole());
-            return userRepository.save(updatedUser);
-        } else {
-            throw new RuntimeException("User not found with id: " + id);
+    public User updateUser(User user,int id) {
+        User existingUser = userRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("User not found"));
+
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setDob(user.getDob());
+        existingUser.setBio(user.getBio());
+        existingUser.setImage(user.getImage());
+        existingUser.setRole(user.getRole());
+
+        // Only encode the password if it's being updated
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+
+        return userRepository.save(existingUser);
     }
+
 }
+

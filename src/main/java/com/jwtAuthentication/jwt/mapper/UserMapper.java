@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ToString
-
 public class UserMapper {
     public static UserRequestDto toDTO(User user) {
         UserRequestDto dto = new UserRequestDto();
@@ -17,7 +16,7 @@ public class UserMapper {
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
-        dto.setDOB(user.getDOB());
+        dto.setDob(user.getDob()); // Changed from `DOB` to `dob`
         dto.setBio(user.getBio());
         dto.setImage(user.getImage());
         dto.setRole(user.getRole());
@@ -32,7 +31,7 @@ public class UserMapper {
         user.setEmail(dto.getEmail());
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
-        user.setDOB(dto.getDOB());
+        user.setDob(dto.getDob()); // Changed from `DOB` to `dob`
         user.setBio(dto.getBio());
         user.setImage(dto.getImage());
         user.setRole(dto.getRole());
