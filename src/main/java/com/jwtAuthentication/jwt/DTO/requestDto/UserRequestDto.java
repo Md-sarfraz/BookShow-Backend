@@ -15,6 +15,8 @@ public class UserRequestDto {
     private String firstName;
     private String lastName;
     private LocalDate dob;
+    private String country;
+    private String phoneNo;
     private String bio;
     private String image;
     private String role;

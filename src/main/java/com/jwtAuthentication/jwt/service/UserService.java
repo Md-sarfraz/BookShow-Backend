@@ -1,13 +1,13 @@
 package com.jwtAuthentication.jwt.service;
 
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
-import com.jwtAuthentication.jwt.DTO.requestDto.UserRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.controllers.AuthController;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,6 +34,8 @@ public class UserService {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
     }
+
+
 
 
     public LoginResponse verifyUser(LoginRequest loginRequest) {
@@ -87,20 +89,44 @@ public class UserService {
         return "User deleted successfully " + id;
     }
 
-    public User updateUser(User user,int id) {
+    public User updateUser(User user, int id) {
         User existingUser = userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("User not found"));
 
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setDob(user.getDob());
-        existingUser.setBio(user.getBio());
-        existingUser.setImage(user.getImage());
-        existingUser.setRole(user.getRole());
+        // Only update fields that are not null in the request
+        if (user.getUsername() != null) {
+            existingUser.setUsername(user.getUsername());
+        }
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
+        }
+        if (user.getFirstName() != null) {
+            existingUser.setFirstName(user.getFirstName());
+        }
+        if (user.getLastName() != null) {
+            existingUser.setLastName(user.getLastName());
+        }
+        if (user.getCountry() != null) {
+            existingUser.setCountry(user.getCountry());
+        }
+        if (user.getCountry() != null) {
+            existingUser.setPhoneNo(user.getPhoneNo());
+        }
 
-        // Only encode the password if it's being updated
+        if (user.getDob() != null) {
+            existingUser.setDob(user.getDob());
+        }
+        if (user.getBio() != null) {
+            existingUser.setBio(user.getBio());
+        }
+        if (user.getImage() != null) {
+            existingUser.setImage(user.getImage());
+        }
+        if (user.getRole() != null) {
+            existingUser.setRole(user.getRole());
+        }
+
+        // Only update the password if provided and non-empty
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -108,5 +134,14 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
+
+    public ResponseEntity<?> getUser(int id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 

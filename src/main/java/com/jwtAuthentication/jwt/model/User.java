@@ -29,7 +29,10 @@ public class User {
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd") // Format for JSON responses
     private LocalDate dob;
-
+    @Column
+    private String country;
+    @Column
+    private String phoneNo;
     @Column
     private String bio;
     @Column

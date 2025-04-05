@@ -18,6 +18,10 @@ public class UserController {
     public static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     @Autowired
     private UserService userService;
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?>getUser(@PathVariable int id){
+        return userService.getUser(id);
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable int id){
         String response = userService.deleteUser(id);

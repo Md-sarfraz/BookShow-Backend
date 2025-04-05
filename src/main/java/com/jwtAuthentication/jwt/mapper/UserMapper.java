@@ -16,6 +16,8 @@ public class UserMapper {
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
+        dto.setCountry(user.getCountry());
+        dto.setPhoneNo(user.getPhoneNo());
         dto.setDob(user.getDob()); // Changed from `DOB` to `dob`
         dto.setBio(user.getBio());
         dto.setImage(user.getImage());
@@ -31,6 +33,8 @@ public class UserMapper {
         user.setEmail(dto.getEmail());
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
+        user.setCountry(dto.getCountry());
+        user.setPhoneNo(dto.getPhoneNo());
         user.setDob(dto.getDob()); // Changed from `DOB` to `dob`
         user.setBio(dto.getBio());
         user.setImage(dto.getImage());
