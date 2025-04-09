@@ -24,7 +24,7 @@ public class Movie {
 //    @NotBlank(message = "title is required")
     private String title;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column
@@ -44,6 +44,8 @@ public class Movie {
 
     @Column
     private String postUrl;
+    @Column
+    private Boolean isFeatured;
 
     @Column
     private String backgroundImageUrl;

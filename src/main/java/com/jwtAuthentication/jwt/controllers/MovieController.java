@@ -8,6 +8,7 @@ import com.jwtAuthentication.jwt.mapper.MovieMapper;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,15 +78,18 @@ public ResponseEntity<Movie> addMovie(
         return movieService.deleteMovie(id);
     }
     @PutMapping("/update/{movieId}")
-    public ResponseEntity<ApiResponse<MovieResponseDto>> updateMovie(@RequestBody MovieRequestDto movieRequestDto,@PathVariable int movieId){
-        MovieResponseDto updatedMovie=movieService.updateMovie(movieRequestDto,movieId);
-        ApiResponse<MovieResponseDto> response=new ApiResponse<>(
-                "success",
+    public ResponseEntity<ApiResponse<MovieResponseDto>> updateMovie(@RequestBody MovieRequestDto movieRequestDto, @PathVariable int movieId) {
+        MovieResponseDto updatedMovie = movieService.updateMovie(movieRequestDto, movieId);
+
+        ApiResponse<MovieResponseDto> response = new ApiResponse<>(
                 "Movie updated successfully",
-                updatedMovie
+                updatedMovie,
+                HttpStatus.OK
         );
+
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/findAllMovie")
     public List<Movie> findAllMovie(){
         return movieService.findAllMovie();

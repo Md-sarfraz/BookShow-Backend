@@ -23,7 +23,8 @@ public class MovieRequestDto {
     private String director;  // Added
     private String trailer;  // Added
     private List<String> castMember;  // Added
-    private TheaterDto theater;  // Added
+    private TheaterDto theater;
+    private Boolean featured;// Added
 
     @Data
     public static class TheaterDto {

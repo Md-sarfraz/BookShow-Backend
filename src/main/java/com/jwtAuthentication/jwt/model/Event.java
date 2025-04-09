@@ -9,22 +9,36 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+    private int id;
+
     @Column
     private String title;
+
     @Column
     private String category;
+
     @Column
     private String date;
+
+    @Column
+    private String time;
+
     @Column
     private String location;
-    @Column
-    private String imageUrl;
+
     @Column
     private String price;
+
+    @Column
+    private String imageUrl;
+
+    @Column
+    private String backgroundImageUrl;
+
+    @Column(columnDefinition = "TEXT") // In case description is long
+    private String description;
 }

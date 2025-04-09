@@ -14,9 +14,12 @@ public class EventMapper {
         dto.setTitle(event.getTitle());
         dto.setCategory(event.getCategory());
         dto.setDate(event.getDate());
+        dto.setTime(event.getTime());
         dto.setLocation(event.getLocation());
         dto.setImageUrl(event.getImageUrl());
+        dto.setBackgroundImageUrl(event.getBackgroundImageUrl());
         dto.setPrice(event.getPrice());
+        dto.setDescription(event.getDescription());
         return dto;
     }
 
@@ -25,9 +28,12 @@ public class EventMapper {
         event.setTitle(dto.getTitle());
         event.setCategory(dto.getCategory());
         event.setDate(dto.getDate());
+        event.setTime(dto.getTime());
         event.setLocation(dto.getLocation());
         event.setImageUrl(dto.getImageUrl());
+        event.setBackgroundImageUrl(dto.getBackgroundImageUrl());
         event.setPrice(dto.getPrice());
+        event.setDescription(dto.getDescription());
         return event;
     }
 }

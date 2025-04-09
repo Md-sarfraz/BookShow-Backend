@@ -6,7 +6,6 @@ import com.jwtAuthentication.jwt.model.Theater;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,14 +32,15 @@ public class MovieMapper {
         movie.setDirector(dto.getDirector());
         movie.setTrailer(dto.getTrailer());
         movie.setCastMember(dto.getCastMember());
-        
+        movie.setIsFeatured(dto.getFeatured()); // <-- Added this line
+
         // Handle theater conversion
         if (dto.getTheater() != null) {
             Theater theater = new Theater();
-            theater.setId(dto.getTheater().getId()); // Using setTheaterId, adjust if your field is named differently
+            theater.setId(dto.getTheater().getId());
             movie.setTheater(theater);
         }
-        
+
         return movie;
     }
 
@@ -48,7 +48,7 @@ public class MovieMapper {
         if (entity == null) {
             return null;
         }
-        
+
         MovieRequestDto dto = new MovieRequestDto();
         dto.setMovieId(entity.getMovieId());
         dto.setTitle(entity.getTitle());
@@ -63,30 +63,22 @@ public class MovieMapper {
         dto.setDirector(entity.getDirector());
         dto.setTrailer(entity.getTrailer());
         dto.setCastMember(entity.getCastMember());
-        
+        dto.setFeatured(entity.getIsFeatured()); // <-- Added this line
+
         // Handle theater conversion
         if (entity.getTheater() != null) {
             MovieRequestDto.TheaterDto theaterDto = new MovieRequestDto.TheaterDto();
-            theaterDto.setId(entity.getTheater().getId()); // Using getTheaterId, adjust if your field is named differently
+            theaterDto.setId(entity.getTheater().getId());
             dto.setTheater(theaterDto);
         }
-        
+
         return dto;
     }
-    
-    /**
-     * Maps a list of Movie entities to a list of MovieRequestDtos
-     * 
-     * @param entities the list of Movie entities
-     * @return the list of MovieRequestDtos
-     */
+
     public List<MovieRequestDto> toDtoList(List<Movie> entities) {
-        if (entities == null) {
-            return Collections.emptyList();
+        if (entities == null || entities.isEmpty()) {
+            return List.of();
         }
-        
-        return entities.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        return entities.stream().map(this::toDto).collect(Collectors.toList());
     }
 }

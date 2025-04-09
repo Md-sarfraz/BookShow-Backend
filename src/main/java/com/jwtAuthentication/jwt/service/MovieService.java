@@ -88,35 +88,41 @@ public class MovieService {
     }
 
     public MovieResponseDto updateMovie(MovieRequestDto movieRequestDto, int movieId) {
-       Optional<Movie> optionalMovie = movieRepository.findById(movieId);
-       if (optionalMovie.isPresent()) {
-           Movie updatedMovie = optionalMovie.get();
-           updatedMovie.setTitle(movieRequestDto.getTitle());
-           updatedMovie.setDescription(movieRequestDto.getDescription());
-           updatedMovie.setGenre(movieRequestDto.getGenre());
-           updatedMovie.setDuration(movieRequestDto.getDuration());
-           updatedMovie.setLanguage(movieRequestDto.getLanguage());
-           updatedMovie.setReleaseDate(String.valueOf(LocalDate.parse(movieRequestDto.getReleaseDate())));
-           updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
-           updatedMovie.setRating(movieRequestDto.getRating());
-           movieRepository.save(updatedMovie);
+        Optional<Movie> optionalMovie = movieRepository.findById(movieId);
 
-           MovieResponseDto movieResponseDto = new MovieResponseDto();
-           movieResponseDto.setMovieId(updatedMovie.getMovieId());
-           movieResponseDto.setTitle(updatedMovie.getTitle());
-           movieResponseDto.setDescription(updatedMovie.getDescription());
-           movieResponseDto.setGenre(updatedMovie.getGenre());
-           movieResponseDto.setDuration(updatedMovie.getDuration());
-           movieResponseDto.setLanguage(updatedMovie.getLanguage());
-           movieResponseDto.setReleaseDate(String.valueOf(updatedMovie.getReleaseDate()));
-           movieResponseDto.setPostUrl(updatedMovie.getPostUrl());
-           movieResponseDto.setRating(updatedMovie.getRating());
-           return movieResponseDto;
-       }
-        else {
+        if (optionalMovie.isPresent()) {
+            Movie updatedMovie = optionalMovie.get();
+
+            updatedMovie.setTitle(movieRequestDto.getTitle());
+            updatedMovie.setDescription(movieRequestDto.getDescription());
+            updatedMovie.setGenre(movieRequestDto.getGenre());
+            updatedMovie.setDuration(movieRequestDto.getDuration());
+            updatedMovie.setLanguage(movieRequestDto.getLanguage());
+            updatedMovie.setReleaseDate(String.valueOf(LocalDate.parse(movieRequestDto.getReleaseDate())));
+            updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
+            updatedMovie.setRating(movieRequestDto.getRating());
+            updatedMovie.setIsFeatured(movieRequestDto.getFeatured());  // <-- Added this line
+
+            movieRepository.save(updatedMovie);
+
+            MovieResponseDto movieResponseDto = new MovieResponseDto();
+            movieResponseDto.setMovieId(updatedMovie.getMovieId());
+            movieResponseDto.setTitle(updatedMovie.getTitle());
+            movieResponseDto.setDescription(updatedMovie.getDescription());
+            movieResponseDto.setGenre(updatedMovie.getGenre());
+            movieResponseDto.setDuration(updatedMovie.getDuration());
+            movieResponseDto.setLanguage(updatedMovie.getLanguage());
+            movieResponseDto.setReleaseDate(String.valueOf(updatedMovie.getReleaseDate()));
+            movieResponseDto.setPostUrl(updatedMovie.getPostUrl());
+            movieResponseDto.setRating(updatedMovie.getRating());
+            movieResponseDto.setFeatured(updatedMovie.getIsFeatured());  // <-- Added this line
+
+            return movieResponseDto;
+        } else {
             throw new RuntimeException("Movie not found with id: " + movieId);
-       }
+        }
     }
+
 
     public List<Movie> findAllMovie() {
        return movieRepository.findAll();

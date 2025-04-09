@@ -17,4 +17,5 @@ public class MovieResponseDto {
     private String releaseDate;
     private String postUrl;
     private String rating;
+    private Boolean featured;
 }
