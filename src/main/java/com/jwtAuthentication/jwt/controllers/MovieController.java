@@ -110,5 +110,11 @@ public ResponseEntity<Movie> addMovie(
                                     @RequestParam(required = false) String format) {
         return movieService.filterMovies(language, genre,format);
     }
+
+
+    @GetMapping("/featured")
+    public List<Movie> getTopFeaturedMovies() {
+        return movieService.getTopFeaturedMovies();
+    }
 //
 }

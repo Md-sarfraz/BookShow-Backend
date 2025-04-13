@@ -2,8 +2,10 @@ package com.jwtAuthentication.jwt.repository;
 
 import com.jwtAuthentication.jwt.model.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,6 +29,9 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     List<Movie> findByGenre(String genre);
     List<Movie> findByFormat(String format);
     List<Movie> findAll();
+
+    @Query("SELECT m FROM Movie m WHERE m.isFeatured = true ORDER BY m.releaseDate DESC")
+    List<Movie> findTopFeaturedMovies(Pageable pageable);
 
 
     // Find movies released after a specific date

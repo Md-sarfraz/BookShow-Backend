@@ -8,6 +8,8 @@ import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
 import com.jwtAuthentication.jwt.repository.TheaterRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -169,6 +171,12 @@ public class MovieService {
         } else {
             return movieRepository.findAll();
         }
+    }
+
+    public List<Movie> getTopFeaturedMovies() {
+        // Fetching the top 5 featured movies (you can change the number in PageRequest)
+        Pageable topFive = PageRequest.of(0, 5);  // This returns the first 5 featured movies
+        return movieRepository.findTopFeaturedMovies((java.awt.print.Pageable) topFive);
     }
 
 
