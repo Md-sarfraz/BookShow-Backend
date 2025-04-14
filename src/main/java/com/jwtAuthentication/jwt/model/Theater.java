@@ -19,6 +19,12 @@ public class Theater {
 
     @Column
     private String name;
+
+    @ElementCollection
+    @CollectionTable(name = "movie_times", joinColumns = @JoinColumn(name = "movieId"))
+    @Column(name = "time")
+    private List<String> time;
+
     @Column
     private String location;
     @Column
