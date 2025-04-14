@@ -37,4 +37,13 @@ public class TheaterController {
     public ResponseEntity<String> deleteTheater(@PathVariable int id) {
         return ResponseEntity.ok( theaterService.deleteTheater(id));
     }
+
+//    @GetMapping("/by-movie/{movieId}")
+//    public ResponseEntity<List<Theater>> getTheatersByMovie(@PathVariable int movieId) {
+//        List<Theater> theaters = theaterService.getTheatersByMovie(movieId);
+//        return ResponseEntity.ok(theaters);
+//    }
+
+
+
 }

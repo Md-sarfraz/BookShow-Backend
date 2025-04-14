@@ -1,6 +1,7 @@
 package com.jwtAuthentication.jwt.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -68,8 +69,19 @@ public class Movie {
     private List<String>castMember;
 
 
-    @ManyToOne
-    @JoinColumn(name = "theater_id")
+//    @ManyToOne
+//    @JoinColumn(name = "theater_id")
+//    @JsonIgnore
+//    private Theater theater;
+
+    @ManyToMany
+
+    @JoinTable(
+            name = "movie_theater",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "theater_id")
+    )
     @JsonIgnore
-    private Theater theater;
+    private List<Theater> theaters;
+
 }

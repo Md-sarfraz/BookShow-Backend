@@ -32,13 +32,17 @@ public class MovieMapper {
         movie.setDirector(dto.getDirector());
         movie.setTrailer(dto.getTrailer());
         movie.setCastMember(dto.getCastMember());
-        movie.setIsFeatured(dto.getFeatured()); // <-- Added this line
+        movie.setIsFeatured(dto.getFeatured());
+        movie.setBackgroundImageUrl(dto.getBackgroundImageUrl());
 
-        // Handle theater conversion
-        if (dto.getTheater() != null) {
-            Theater theater = new Theater();
-            theater.setId(dto.getTheater().getId());
-            movie.setTheater(theater);
+        // Handle theaters (many-to-many)
+        if (dto.getTheaters() != null) {
+            List<Theater> theaters = dto.getTheaters().stream().map(theaterDto -> {
+                Theater theater = new Theater();
+                theater.setId(theaterDto.getId());
+                return theater;
+            }).collect(Collectors.toList());
+            movie.setTheaters(theaters);
         }
 
         return movie;
@@ -63,13 +67,17 @@ public class MovieMapper {
         dto.setDirector(entity.getDirector());
         dto.setTrailer(entity.getTrailer());
         dto.setCastMember(entity.getCastMember());
-        dto.setFeatured(entity.getIsFeatured()); // <-- Added this line
+        dto.setFeatured(entity.getIsFeatured());
+        dto.setBackgroundImageUrl(entity.getBackgroundImageUrl());
 
-        // Handle theater conversion
-        if (entity.getTheater() != null) {
-            MovieRequestDto.TheaterDto theaterDto = new MovieRequestDto.TheaterDto();
-            theaterDto.setId(entity.getTheater().getId());
-            dto.setTheater(theaterDto);
+        // Handle theaters (many-to-many)
+        if (entity.getTheaters() != null) {
+            List<MovieRequestDto.TheaterDto> theaterDtos = entity.getTheaters().stream().map(theater -> {
+                MovieRequestDto.TheaterDto theaterDto = new MovieRequestDto.TheaterDto();
+                theaterDto.setId(theater.getId());
+                return theaterDto;
+            }).collect(Collectors.toList());
+            dto.setTheaters(theaterDtos);
         }
 
         return dto;

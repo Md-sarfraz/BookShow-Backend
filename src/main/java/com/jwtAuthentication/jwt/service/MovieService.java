@@ -1,5 +1,4 @@
 package com.jwtAuthentication.jwt.service;
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.jwtAuthentication.jwt.DTO.requestDto.MovieRequestDto;
@@ -31,28 +30,6 @@ public class MovieService {
         this.cloudinary = cloudinary;
     }
 
-//    public Movie saveMovie(String title, String description, String genre, String format, String duration, String language, String releaseDate, String postUrl, String rating, String director, String trailer, MultipartFile imageFile, int theaterId) throws IOException {
-//        Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
-//        String imageUrl = uploadResult.get("url").toString();
-//
-//        Theater theater = theaterRepository.findById(theaterId)
-//                .orElseThrow(() -> new RuntimeException("Theater not found"));
-//
-//        Movie movie=new Movie();
-//        movie.setTitle(title);
-//        movie.setDescription(description);
-//        movie.setGenre(genre);
-//        movie.setFormat(format);
-//        movie.setDuration(duration);
-//        movie.setLanguage(language);
-//        movie.setReleaseDate(String.valueOf(LocalDate.parse(releaseDate)));
-//        movie.setPostUrl(imageUrl);
-//        movie.setRating(rating);
-//        movie.setDirector(director);
-//        movie.setTrailer(trailer);
-//        movie.setTheater(theater);
-//        return movieRepository.save(movie);
-//    }
 
     public Movie saveMovie(Movie movie, MultipartFile imageFile, MultipartFile backgroundImageFile) throws IOException {
         // Upload main image to Cloudinary
@@ -63,17 +40,20 @@ public class MovieService {
         // Upload background image to Cloudinary
         Map uploadResultBg = cloudinary.uploader().upload(backgroundImageFile.getBytes(), ObjectUtils.emptyMap());
         String backgroundImageUrl = uploadResultBg.get("secure_url").toString();
-        movie.setBackgroundImageUrl(backgroundImageUrl);  // Add a new field in your Movie entity
+        movie.setBackgroundImageUrl(backgroundImageUrl);
 
-        // Associate theater if provided
-        if (movie.getTheater() != null && movie.getTheater().getId() > 0) {
-            Theater theater = theaterRepository.findById(movie.getTheater().getId())
-                    .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + movie.getTheater().getId()));
-            movie.setTheater(theater);
+        // Associate theaters if provided
+        if (movie.getTheaters() != null && !movie.getTheaters().isEmpty()) {
+            List<Theater> validTheaters = movie.getTheaters().stream()
+                    .map(theater -> theaterRepository.findById(theater.getId())
+                            .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + theater.getId())))
+                    .toList();
+            movie.setTheaters(validTheaters);
         }
 
         return movieRepository.save(movie);
     }
+
 
 
 
@@ -173,11 +153,11 @@ public class MovieService {
         }
     }
 
-    public List<Movie> getTopFeaturedMovies() {
-        // Fetching the top 5 featured movies (you can change the number in PageRequest)
-        Pageable topFive = PageRequest.of(0, 5);  // This returns the first 5 featured movies
-        return movieRepository.findTopFeaturedMovies((java.awt.print.Pageable) topFive);
-    }
+//    public List<Movie> getTopFeaturedMovies() {
+//        // Fetching the top 5 featured movies (you can change the number in PageRequest)
+//        Pageable topFive = PageRequest.of(0, 5);  // This returns the first 5 featured movies
+//        return movieRepository.findTopFeaturedMovies((java.awt.print.Pageable) topFive);
+//    }
 
 
 

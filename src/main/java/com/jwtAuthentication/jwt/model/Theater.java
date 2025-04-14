@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +43,14 @@ public class Theater {
     @Column
     private String operatingHours;
 
-    @Column
-    @OneToMany(mappedBy = "theater")
-    private List<Movie>ListOfMovies;
+//    @Column
+//    @OneToMany(mappedBy = "theater")
+//    private List<Movie>ListOfMovies;
+
+
+    @ManyToMany(mappedBy = "theaters")
+    @JsonIgnoreProperties("theaters")
+    private List<Movie> movies;
+
+
 }

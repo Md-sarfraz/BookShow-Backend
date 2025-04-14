@@ -30,12 +30,17 @@ public class TheaterService {
     }
 
     public String deleteTheater(int id) {
-        boolean hasMovies = movieRepository.existsByTheaterId(id);
+        boolean hasMovies = movieRepository.existsByTheatersId(id);
         if (hasMovies) {
             throw new IllegalStateException("Cannot delete theater. Movies are still assigned to it.");
         }
         theaterRepository.deleteById(id);
         return "Successfully deleted theater with id: " + id;
     }
+
+
+//    public List<Theater> getTheatersByMovie(int movieId) {
+//        return theaterRepository.findByMoviesId(movieId); // assuming Theater has a list of Movies
+//    }
 
 }

@@ -9,7 +9,6 @@ import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -112,9 +111,9 @@ public ResponseEntity<Movie> addMovie(
     }
 
 
-    @GetMapping("/featured")
-    public List<Movie> getTopFeaturedMovies() {
-        return movieService.getTopFeaturedMovies();
-    }
+//    @GetMapping("/featured")
+//    public List<Movie> getTopFeaturedMovies() {
+//        return movieService.getTopFeaturedMovies();
+//    }
 //
 }
