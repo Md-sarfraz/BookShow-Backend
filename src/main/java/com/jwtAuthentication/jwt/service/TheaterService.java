@@ -39,8 +39,8 @@ public class TheaterService {
     }
 
 
-//    public List<Theater> getTheatersByMovie(int movieId) {
-//        return theaterRepository.findByMoviesId(movieId); // assuming Theater has a list of Movies
-//    }
+    public List<Theater> findTheatersByMovieId(Integer movieId) {
+        return theaterRepository.findTheatersByMovieId(movieId);
+    }
 
 }

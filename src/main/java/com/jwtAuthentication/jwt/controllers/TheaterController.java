@@ -38,11 +38,11 @@ public class TheaterController {
         return ResponseEntity.ok( theaterService.deleteTheater(id));
     }
 
-//    @GetMapping("/by-movie/{movieId}")
-//    public ResponseEntity<List<Theater>> getTheatersByMovie(@PathVariable int movieId) {
-//        List<Theater> theaters = theaterService.getTheatersByMovie(movieId);
-//        return ResponseEntity.ok(theaters);
-//    }
+    @GetMapping("/by-movie/{movieId}")
+    public ResponseEntity<List<Theater>> getTheatersByMovieId(@PathVariable int movieId) {
+        List<Theater> theaters = theaterService.findTheatersByMovieId(movieId);
+        return ResponseEntity.ok(theaters);
+    }
 
 
 
