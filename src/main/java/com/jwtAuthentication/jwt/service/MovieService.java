@@ -80,6 +80,7 @@ public class MovieService {
             updatedMovie.setGenre(movieRequestDto.getGenre());
             updatedMovie.setDuration(movieRequestDto.getDuration());
             updatedMovie.setLanguage(movieRequestDto.getLanguage());
+            updatedMovie.setPrice(movieRequestDto.getPrice());
             updatedMovie.setReleaseDate(String.valueOf(LocalDate.parse(movieRequestDto.getReleaseDate())));
             updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
             updatedMovie.setRating(movieRequestDto.getRating());
@@ -94,6 +95,7 @@ public class MovieService {
             movieResponseDto.setGenre(updatedMovie.getGenre());
             movieResponseDto.setDuration(updatedMovie.getDuration());
             movieResponseDto.setLanguage(updatedMovie.getLanguage());
+            movieResponseDto.setPrice(updatedMovie.getPrice());
             movieResponseDto.setReleaseDate(String.valueOf(updatedMovie.getReleaseDate()));
             movieResponseDto.setPostUrl(updatedMovie.getPostUrl());
             movieResponseDto.setRating(updatedMovie.getRating());

@@ -37,7 +37,8 @@ public class SecurityConfig {
             "/cloudinary/upload",
             "/cloudinary/upload/**",
             "/api/events/",
-            "/api/events/**"
+            "/api/events/**",
+            "api/user/**"
     };
     @Autowired
     private UserDetailsService userDetailsService;

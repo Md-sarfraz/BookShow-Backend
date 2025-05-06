@@ -12,6 +12,7 @@ public class MovieRequestDto {
     private String format;
     private String duration;
     private String language;
+    private String price;
     private String releaseDate;
     private String postUrl;
     private String backgroundImageUrl;

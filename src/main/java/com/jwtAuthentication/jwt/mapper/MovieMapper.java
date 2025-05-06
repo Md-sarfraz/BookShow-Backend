@@ -26,6 +26,7 @@ public class MovieMapper {
         movie.setFormat(dto.getFormat());
         movie.setDuration(dto.getDuration());
         movie.setLanguage(dto.getLanguage());
+        movie.setPrice(dto.getPrice());
         movie.setReleaseDate(dto.getReleaseDate());
         movie.setPostUrl(dto.getPostUrl());
         movie.setRating(dto.getRating());
@@ -61,6 +62,7 @@ public class MovieMapper {
         dto.setFormat(entity.getFormat());
         dto.setDuration(entity.getDuration());
         dto.setLanguage(entity.getLanguage());
+        dto.setPrice(entity.getPrice());
         dto.setReleaseDate(entity.getReleaseDate());
         dto.setPostUrl(entity.getPostUrl());
         dto.setRating(entity.getRating());

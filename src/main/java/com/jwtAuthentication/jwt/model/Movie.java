@@ -41,6 +41,9 @@ public class Movie {
     private String language;
 
     @Column
+    private String price;
+
+    @Column
     private String releaseDate;
 
     @Column
