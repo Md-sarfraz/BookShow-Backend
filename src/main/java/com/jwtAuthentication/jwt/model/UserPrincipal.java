@@ -14,7 +14,11 @@ public class UserPrincipal implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        // Use the actual user's role instead of hardcoded "USER"
+        Role userRole = user.getRole();
+        String role = (userRole != null) ? userRole.name() : "USER";
+        // Spring Security requires "ROLE_" prefix for hasRole() checks
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role));
     }
     @Override
     public String getPassword() {

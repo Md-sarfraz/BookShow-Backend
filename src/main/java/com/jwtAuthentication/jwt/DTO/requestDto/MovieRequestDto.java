@@ -1,6 +1,8 @@
 package com.jwtAuthentication.jwt.DTO.requestDto;
 
 import lombok.Data;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -12,11 +14,11 @@ public class MovieRequestDto {
     private String format;
     private String duration;
     private String language;
-    private String price;
-    private String releaseDate;
+    private Double price;
+    private LocalDate releaseDate;
     private String postUrl;
     private String backgroundImageUrl;
-    private String rating;
+    private Double rating;
     private String director;
     private String trailer;
     private List<String> castMember;

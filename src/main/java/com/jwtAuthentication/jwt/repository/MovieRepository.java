@@ -30,10 +30,15 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     List<Movie> findByFormat(String format);
     List<Movie> findAll();
 
-    @Query("SELECT m FROM Movie m WHERE m.isFeatured = true ORDER BY m.releaseDate DESC")
+    @Query("SELECT m FROM Movie m WHERE m.featured = true ORDER BY m.releaseDate DESC")
     List<Movie> findTopFeaturedMovies(Pageable pageable);
 
     boolean existsByTheatersId(int theaterId);
+    List<Movie> findTop10ByOrderByViewsDesc();
+
+    List<Movie> findTop10ByOrderByBookingsDesc();
+
+    List<Movie> findTop10ByOrderByRatingDesc();
 
 
     // Find movies released after a specific date

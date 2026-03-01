@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -73,7 +73,6 @@ public class EventController {
         EventRequestDto event = eventService.getEventById(id);
         return ResponseEntity.ok(new ApiResponse<>("Fetched event successfully", event, HttpStatus.OK));
     }
-
     // Update Event
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<String>> updateEvent(@PathVariable int id, @RequestBody EventRequestDto eventRequestDto) {

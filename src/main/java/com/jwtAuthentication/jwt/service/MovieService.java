@@ -81,10 +81,10 @@ public class MovieService {
             updatedMovie.setDuration(movieRequestDto.getDuration());
             updatedMovie.setLanguage(movieRequestDto.getLanguage());
             updatedMovie.setPrice(movieRequestDto.getPrice());
-            updatedMovie.setReleaseDate(String.valueOf(LocalDate.parse(movieRequestDto.getReleaseDate())));
+            updatedMovie.setReleaseDate(movieRequestDto.getReleaseDate());
             updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
             updatedMovie.setRating(movieRequestDto.getRating());
-            updatedMovie.setIsFeatured(movieRequestDto.getFeatured());  // <-- Added this line
+            updatedMovie.setFeatured(movieRequestDto.getFeatured());  // <-- Added this line
 
             movieRepository.save(updatedMovie);
 
@@ -99,7 +99,7 @@ public class MovieService {
             movieResponseDto.setReleaseDate(String.valueOf(updatedMovie.getReleaseDate()));
             movieResponseDto.setPostUrl(updatedMovie.getPostUrl());
             movieResponseDto.setRating(updatedMovie.getRating());
-            movieResponseDto.setFeatured(updatedMovie.getIsFeatured());  // <-- Added this line
+            movieResponseDto.setFeatured(updatedMovie.getFeatured());  // <-- Added this line
 
             return movieResponseDto;
         } else {
@@ -172,4 +172,37 @@ public class MovieService {
 //    public List<Movie> filterByRating(Double rating) {
 //        return movieRepository.findByRatingGreaterThanEqual(rating);
 //    }
+
+    public List<Movie> getTrendingMovies() {
+        return movieRepository.findTop10ByOrderByViewsDesc();
+    }
+
+    // 🎟 Popular = highest bookings
+    public List<Movie> getPopularMovies() {
+        return movieRepository.findTop10ByOrderByBookingsDesc();
+    }
+
+    // ⭐ Top Rated = highest rating
+    public List<Movie> getTopRatedMovies() {
+        return movieRepository.findTop10ByOrderByRatingDesc();
+    }
+
+    // 👁 Increase views
+    public void increaseView(Long movieId) {
+        Movie movie = movieRepository.findById(Math.toIntExact(movieId))
+                .orElseThrow(() -> new RuntimeException("Movie not found with id " + movieId));
+
+        movie.setViews(movie.getViews() + 1);
+        movieRepository.save(movie);
+    }
+
+    // 🎟 Increase bookings
+    public void increaseBooking(Long movieId) {
+        Movie movie = movieRepository.findById(Math.toIntExact(movieId))
+                .orElseThrow(() -> new RuntimeException("Movie not found with id " + movieId));
+
+        movie.setBookings(movie.getBookings() + 1);
+        movieRepository.save(movie);
+    }
+
 }

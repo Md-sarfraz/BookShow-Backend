@@ -2,6 +2,7 @@ package com.jwtAuthentication.jwt.mapper;
 
 import com.jwtAuthentication.jwt.DTO.requestDto.UserRequestDto;
 import com.jwtAuthentication.jwt.model.User;
+import com.jwtAuthentication.jwt.model.Role;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class UserMapper {
 
     public static User toEntity(UserRequestDto dto) {
         User user = new User();
-        user.setId(dto.getId());
+        // Don't set ID and Role for security reasons (handled by service layer)
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
         user.setEmail(dto.getEmail());
@@ -38,7 +39,6 @@ public class UserMapper {
         user.setDob(dto.getDob()); // Changed from `DOB` to `dob`
         user.setBio(dto.getBio());
         user.setImage(dto.getImage());
-        user.setRole(dto.getRole());
         return user;
     }
 }

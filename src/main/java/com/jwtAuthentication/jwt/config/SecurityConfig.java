@@ -26,20 +26,20 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    String[] PUBLIC_URLS = {
-            "/api/user/public/**",
-            "/api/v1/login",
-            "/api/v1/register",
-            "/api/movie/",
-            "/api/movie/**",
-            "/api/movie/update/**",
-            "/api/theater/**",
-            "/cloudinary/upload",
-            "/cloudinary/upload/**",
-            "/api/events/",
-            "/api/events/**",
-            "api/user/**"
-    };
+//    String[] PUBLIC_URLS = {
+//            "/api/user/public/**",
+//            "/api/v1/login",
+//            "/api/v1/register",
+//            "/api/movie/",
+//            "/api/movie/**",
+//            "/api/movie/update/**",
+//            "/api/theater/**",
+//            "/cloudinary/upload",
+//            "/cloudinary/upload/**",
+//            "/api/events/",
+//            "/api/events/**",
+//            "api/user/**"
+//    };
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
@@ -49,11 +49,33 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(PUBLIC_URLS)
+//                        .permitAll().requestMatchers(HttpMethod.GET).permitAll()
+//
+//                        .anyRequest().authenticated())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_URLS)
-                        .permitAll().requestMatchers(HttpMethod.GET).permitAll()
 
-                        .anyRequest().authenticated())
+                        // Auth APIs
+                        .requestMatchers(
+                                "/auth/register",
+                                "/auth/login"
+                        ).permitAll()
+
+                        // Public GET APIs only
+                        .requestMatchers(HttpMethod.GET,
+                                "/movie/**",
+                                "/events/**",
+                                "/theater/**"
+                        ).permitAll()
+
+                        // Role-based
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+
+                        .anyRequest().authenticated()
+                )
+
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -93,6 +115,7 @@ public class SecurityConfig {
         corsConfiguration.addAllowedMethod("GET");
         corsConfiguration.addAllowedMethod("DELETE");
         corsConfiguration.addAllowedMethod("PUT");
+        corsConfiguration.addAllowedMethod("PATCH");
         corsConfiguration.addAllowedMethod("OPTIONS");
         corsConfiguration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

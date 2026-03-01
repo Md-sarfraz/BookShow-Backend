@@ -18,6 +18,7 @@ public class User {
     @Column
     String username;
     @Column
+    @JsonIgnore
     String password;
     @Column
     String email;
@@ -37,7 +38,8 @@ public class User {
     private String bio;
     @Column
     private String image;
+    @Enumerated(EnumType.STRING)
     @Column
-    private String role;
+    private Role role;
 
 }

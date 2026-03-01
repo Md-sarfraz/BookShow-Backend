@@ -1,23 +1,26 @@
 package com.jwtAuthentication.jwt.service;
 
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
+import com.jwtAuthentication.jwt.DTO.requestDto.SignUpRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
-import com.jwtAuthentication.jwt.controllers.AuthController;
+import com.jwtAuthentication.jwt.model.Role;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,127 +30,163 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public UserService(JwtService jwtService, PasswordEncoder passwordEncoder, UserRepository userRepository, AuthenticationManager authenticationManager) {
+    public UserService(JwtService jwtService,
+                       PasswordEncoder passwordEncoder,
+                       UserRepository userRepository,
+                       AuthenticationManager authenticationManager) {
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
     }
 
-
-
+    /* ========================= LOGIN ========================= */
 
     public LoginResponse verifyUser(LoginRequest loginRequest) {
+
         try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
 
-            Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
-            if (authentication.isAuthenticated()) {
-                User user = userRepository.findByEmail(loginRequest.getEmail());
-                String role = user.getRole();
-                if ("user".equals(role)) {
-                    String token = jwtService.generateToken(loginRequest.getEmail(), role);
-                    return new LoginResponse(token, user, role);
-                } else if ("admin".equals(role)) {
-                    String token = jwtService.generateToken(loginRequest.getEmail(), role);
-                    return new LoginResponse(token, user, role);
-                } else {
-                    throw new RuntimeException("Invalid role");
-                }
+            if (!authentication.isAuthenticated()) {
+                throw new RuntimeException("Authentication failed");
             }
+
+            User user = userRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            String role = user.getRole().name();
+            String token = jwtService.generateToken(user.getEmail(), role, user.getId());
+            return new LoginResponse(token, role);
+
         } catch (AuthenticationException e) {
-            throw new RuntimeException("Failed to authenticate user");
+            throw new RuntimeException("Invalid email or password");
         }
-        return null;
     }
 
+
+    /* ========================= FILE ========================= */
 
     public InputStream getResources(String path, String fileName) throws FileNotFoundException {
-        String fullPath = path + File.separator + fileName;
-
-        return new FileInputStream(fullPath);
+        return new FileInputStream(path + File.separator + fileName);
     }
 
-    public User saveUser(User user) {
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("user");  // Default role
+    /* ========================= REGISTER ========================= */
+
+    public void saveUser(SignUpRequestDto request) {
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.USER);
+
         userRepository.save(user);
-        return user;
     }
+
+
+    /* ========================= DELETE USER ========================= */
 
     public String deleteUser(int id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user != null) {
-            userRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("User not found with id: " + id);
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 🔐 ADMIN protection
+        if (user.getRole() == Role.ADMIN) {
+            throw new RuntimeException("Admin user cannot be deleted");
         }
-        return "User deleted successfully " + id;
+
+        userRepository.delete(user);
+        return "User deleted successfully";
     }
 
-    public User updateUser(User user, int id) {
-        User existingUser = userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User not found"));
+    /* ========================= UPDATE USER ========================= */
 
-        // Only update fields that are not null in the request
-        if (user.getUsername() != null) {
-            existingUser.setUsername(user.getUsername());
-        }
-        if (user.getEmail() != null) {
-            existingUser.setEmail(user.getEmail());
-        }
-        if (user.getFirstName() != null) {
-            existingUser.setFirstName(user.getFirstName());
-        }
-        if (user.getLastName() != null) {
-            existingUser.setLastName(user.getLastName());
-        }
-        if (user.getCountry() != null) {
-            existingUser.setCountry(user.getCountry());
-        }
-        if (user.getCountry() != null) {
-            existingUser.setPhoneNo(user.getPhoneNo());
+    public User updateUser(User requestUser, int id) {
+
+        // 🔐 Logged-in user
+        String loggedInEmail = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        User loggedInUser = userRepository.findByEmail(loggedInEmail)
+                .orElseThrow(() -> new RuntimeException("Logged-in user not found"));
+
+        // 🔐 USER can update only self
+        if (loggedInUser.getRole() == Role.USER && loggedInUser.getId() != id) {
+            throw new RuntimeException("Access denied");
         }
 
-        if (user.getDob() != null) {
-            existingUser.setDob(user.getDob());
-        }
-        if (user.getBio() != null) {
-            existingUser.setBio(user.getBio());
-        }
-        if (user.getImage() != null) {
-            existingUser.setImage(user.getImage());
-        }
-        if (user.getRole() != null) {
-            existingUser.setRole(user.getRole());
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // ✅ Allowed fields only
+        if (requestUser.getUsername() != null && !requestUser.getUsername().isEmpty())
+            existingUser.setUsername(requestUser.getUsername());
+
+        // Check for email uniqueness before updating
+        if (requestUser.getEmail() != null && !requestUser.getEmail().isEmpty()) {
+            if (!requestUser.getEmail().equals(existingUser.getEmail())) {
+                // Email is being changed, check if new email already exists
+                if (userRepository.findByEmail(requestUser.getEmail()).isPresent()) {
+                    throw new RuntimeException("Email already exists");
+                }
+            }
+            existingUser.setEmail(requestUser.getEmail());
         }
 
-        // Only update the password if provided and non-empty
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (requestUser.getFirstName() != null && !requestUser.getFirstName().isEmpty())
+            existingUser.setFirstName(requestUser.getFirstName());
+
+        if (requestUser.getLastName() != null && !requestUser.getLastName().isEmpty())
+            existingUser.setLastName(requestUser.getLastName());
+
+        if (requestUser.getCountry() != null && !requestUser.getCountry().isEmpty())
+            existingUser.setCountry(requestUser.getCountry());
+
+        if (requestUser.getPhoneNo() != null && !requestUser.getPhoneNo().isEmpty())
+            existingUser.setPhoneNo(requestUser.getPhoneNo());
+
+        if (requestUser.getDob() != null)
+            existingUser.setDob(requestUser.getDob());
+
+        if (requestUser.getBio() != null)
+            existingUser.setBio(requestUser.getBio());
+
+        if (requestUser.getImage() != null)
+            existingUser.setImage(requestUser.getImage());
+
+        // 🔐 Password update (optional)
+        if (requestUser.getPassword() != null && !requestUser.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(requestUser.getPassword()));
         }
+
+        // ❌ ROLE UPDATE REMOVED (VERY IMPORTANT)
 
         return userRepository.save(existingUser);
     }
 
+    /* ========================= GET USER ========================= */
 
-    public ResponseEntity<?> getUser(int id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public User getUser(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    /* ========================= GET ALL USERS ========================= */
 
     public List<User> findAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findByRole(Role.USER); // Admin excluded
     }
 }
-

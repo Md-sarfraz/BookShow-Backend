@@ -41,25 +41,28 @@ public class Movie {
     private String language;
 
     @Column
-    private String price;
+    private Double price;
 
     @Column
-    private String releaseDate;
+    private LocalDate releaseDate;
 
     @Column
     private String postUrl;
     @Column
-    private Boolean isFeatured;
+    private Boolean featured;
 
     @Column
     private String backgroundImageUrl;
 
 
     @Column
-    private String rating;
+    private Double rating;
     @Column
 
     private String director;
+
+    private Long views = 0L;
+    private Long bookings = 0L;
 
 //    @NotBlank(message = "Trailer link is required")
 //    @Pattern(regexp = "^(https?://)?(www\\.)?(youtube\\.com|youtu\\.?be)/.+$",

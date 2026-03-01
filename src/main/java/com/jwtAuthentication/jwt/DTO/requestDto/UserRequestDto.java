@@ -1,6 +1,7 @@
 package com.jwtAuthentication.jwt.DTO.requestDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jwtAuthentication.jwt.model.Role;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,11 +15,14 @@ public class UserRequestDto {
     private String email;
     private String firstName;
     private String lastName;
+    
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dob;
+    
     private String country;
     private String phoneNo;
     private String bio;
     private String image;
-    private String role;
+    private Role role;
 
 }

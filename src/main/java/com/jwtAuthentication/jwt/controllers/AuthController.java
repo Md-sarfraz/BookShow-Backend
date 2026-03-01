@@ -1,12 +1,14 @@
 package com.jwtAuthentication.jwt.controllers;
 
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
+import com.jwtAuthentication.jwt.DTO.requestDto.SignUpRequestDto;
 import com.jwtAuthentication.jwt.DTO.requestDto.UserRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.mapper.UserMapper;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.service.DocumentService;
 import com.jwtAuthentication.jwt.service.UserService;
+import com.jwtAuthentication.jwt.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/auth")
+
 public class AuthController {
     @Value("${file.upload-dir}")
     private String path;
@@ -26,25 +29,32 @@ public class AuthController {
     private UserService userService;
 
 
-    @Autowired
-    private DocumentService documentService;
     @PostMapping("/register")
-    public User registerUser(@RequestBody UserRequestDto userRequestDto) {
-        User user= UserMapper.toEntity(userRequestDto);
-        return userService.saveUser(user);
+    public ResponseEntity<ApiResponse<Void>> registerUser(
+            @RequestBody SignUpRequestDto request) {
+
+          userService.saveUser(request);
+
+        ApiResponse<Void> response = new ApiResponse<>(
+                true,
+                "User registered successfully",
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-        try {
+    public ResponseEntity<ApiResponse<LoginResponse>> loginUser(@RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.verifyUser(loginRequest);
+        ApiResponse<LoginResponse> response = new ApiResponse<>(
+                true,
+                "Login successful",
+                loginResponse
+        );
 
-            LoginResponse response = userService.verifyUser(loginRequest);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            logger.error("Login failed: ", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        }
+        return ResponseEntity.ok(response);
     }
 }

@@ -6,6 +6,7 @@ import com.jwtAuthentication.jwt.model.Theater;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class MovieMapper {
         movie.setDirector(dto.getDirector());
         movie.setTrailer(dto.getTrailer());
         movie.setCastMember(dto.getCastMember());
-        movie.setIsFeatured(dto.getFeatured());
+        movie.setFeatured(dto.getFeatured());
         movie.setBackgroundImageUrl(dto.getBackgroundImageUrl());
 
         // Handle theaters (many-to-many)
@@ -69,7 +70,7 @@ public class MovieMapper {
         dto.setDirector(entity.getDirector());
         dto.setTrailer(entity.getTrailer());
         dto.setCastMember(entity.getCastMember());
-        dto.setFeatured(entity.getIsFeatured());
+        dto.setFeatured(entity.getFeatured());
         dto.setBackgroundImageUrl(entity.getBackgroundImageUrl());
 
         // Handle theaters (many-to-many)
