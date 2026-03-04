@@ -55,6 +55,7 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
         @RequestPart(value = "image", required = false) MultipartFile imageFile,
         @RequestPart(value = "backgroundImage", required = false) MultipartFile backgroundImageFile) {
 
+
     try {
         MovieRequestDto movieDto = objectMapper.readValue(movieJson, MovieRequestDto.class);
         Movie mapped = movieMapper.toEntity(movieDto);

@@ -54,6 +54,9 @@ public class Show {
     @Column
     private String format; // 2D, 3D, IMAX, etc.
 
+    @Column
+    private String screenNumber; // Screen number within the theater (e.g., "Screen 1", "Screen 2")
+
     // Helper method to check if show is available
     public boolean isAvailable() {
         return availableSeats != null && availableSeats > 0;

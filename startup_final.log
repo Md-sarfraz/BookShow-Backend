@@ -1,0 +1,2954 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.jwtAuthentication:jwt >----------------------
+[INFO] Building jwt 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.4.2:run (default-cli) > test-compile @ jwt >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ jwt ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ jwt ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 64 source files with javac [debug parameters release 17] to target\classes
+[INFO] /D:/spring project/BookShow/bookShow-backend/src/main/java/com/jwtAuthentication/jwt/controllers/CloudinaryImageController.java: D:\spring project\BookShow\bookShow-backend\src\main\java\com\jwtAuthentication\jwt\controllers\CloudinaryImageController.java uses unchecked or unsafe operations.
+[INFO] /D:/spring project/BookShow/bookShow-backend/src/main/java/com/jwtAuthentication/jwt/controllers/CloudinaryImageController.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ jwt ---
+[INFO] skip non existing resourceDirectory D:\spring project\BookShow\bookShow-backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ jwt ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot:3.4.2:run (default-cli) < test-compile @ jwt <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.4.2:run (default-cli) @ jwt ---
+[INFO] Attaching agents: []
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.2)
+
+2026-03-05T02:29:28.689+05:30  INFO 11112 --- [jwt] [           main] c.jwtAuthentication.jwt.JwtApplication   : Starting JwtApplication using Java 21.0.7 with PID 11112 (D:\spring project\BookShow\bookShow-backend\target\classes started by mdsar in D:\spring project\BookShow\bookShow-backend)
+2026-03-05T02:29:28.691+05:30  INFO 11112 --- [jwt] [           main] c.jwtAuthentication.jwt.JwtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-03-05T02:29:29.403+05:30  INFO 11112 --- [jwt] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-05T02:29:29.498+05:30  INFO 11112 --- [jwt] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 85 ms. Found 6 JPA repository interfaces.
+2026-03-05T02:29:30.191+05:30  INFO 11112 --- [jwt] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-03-05T02:29:30.210+05:30  INFO 11112 --- [jwt] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-05T02:29:30.210+05:30  INFO 11112 --- [jwt] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2026-03-05T02:29:30.279+05:30  INFO 11112 --- [jwt] [           main] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring embedded WebApplicationContext
+2026-03-05T02:29:30.281+05:30  INFO 11112 --- [jwt] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1538 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-03-05T02:29:30.451+05:30  INFO 11112 --- [jwt] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-05T02:29:30.501+05:30  INFO 11112 --- [jwt] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.5.Final
+2026-03-05T02:29:30.536+05:30  INFO 11112 --- [jwt] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-03-05T02:29:30.845+05:30  INFO 11112 --- [jwt] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-05T02:29:30.880+05:30  INFO 11112 --- [jwt] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-05T02:29:31.242+05:30  INFO 11112 --- [jwt] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37986daf
+2026-03-05T02:29:31.244+05:30  INFO 11112 --- [jwt] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-05T02:29:31.314+05:30  WARN 11112 --- [jwt] [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-05T02:29:31.329+05:30  INFO 11112 --- [jwt] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.4.3
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-05T02:29:32.434+05:30  INFO 11112 --- [jwt] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-05T02:29:32.508+05:30 DEBUG 11112 --- [jwt] [           main] org.hibernate.SQL                        : 
+    alter table shows 
+       add column screen_number varchar(255)
+Hibernate: 
+    alter table shows 
+       add column screen_number varchar(255)
+2026-03-05T02:29:32.721+05:30 DEBUG 11112 --- [jwt] [           main] org.hibernate.SQL                        : 
+    alter table bookings 
+       add constraint FK5f9847fuaqx7qe2xug4e5pky1 
+       foreign key (show_id) 
+       references shows (show_id)
+Hibernate: 
+    alter table bookings 
+       add constraint FK5f9847fuaqx7qe2xug4e5pky1 
+       foreign key (show_id) 
+       references shows (show_id)
+2026-03-05T02:29:32.862+05:30  INFO 11112 --- [jwt] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-05T02:29:33.306+05:30  INFO 11112 --- [jwt] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-05T02:29:33.996+05:30  INFO 11112 --- [jwt] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-05T02:29:33.997+05:30  WARN 11112 --- [jwt] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-05T02:29:34.327+05:30  WARN 11112 --- [jwt] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-05T02:29:35.027+05:30  INFO 11112 --- [jwt] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api/v1'
+2026-03-05T02:29:35.035+05:30  INFO 11112 --- [jwt] [           main] c.jwtAuthentication.jwt.JwtApplication   : Started JwtApplication in 6.854 seconds (process running for 7.223)
+2026-03-05T02:29:35.164+05:30 DEBUG 11112 --- [jwt] [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id 
+    from
+        user u1_0 
+    where
+        u1_0.role=? 
+    limit
+        ?
+Hibernate: 
+    select
+        u1_0.id 
+    from
+        user u1_0 
+    where
+        u1_0.role=? 
+    limit
+        ?
+2026-03-05T02:34:00.650+05:30  INFO 11112 --- [jwt] [nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/api/v1]        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-05T02:34:00.650+05:30  INFO 11112 --- [jwt] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-03-05T02:34:00.652+05:30  INFO 11112 --- [jwt] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-03-05T02:34:00.956+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:01.094+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+hello sarfraz@gmail.com
+2026-03-05T02:34:01.431+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:01.484+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        movie m1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        movie m1_0
+2026-03-05T02:34:01.498+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        theater t1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        theater t1_0
+2026-03-05T02:34:01.512+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        user u1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        user u1_0
+2026-03-05T02:34:01.520+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        count(*) 
+    from
+        event e1_0
+Hibernate: 
+    select
+        count(*) 
+    from
+        event e1_0
+hello sarfraz@gmail.com
+hello sarfraz@gmail.com
+2026-03-05T02:34:08.927+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:08.930+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:08.945+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0
+Hibernate: 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0
+2026-03-05T02:34:08.958+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0 
+    where
+        upper(m1_0.title) like upper(?) escape '\\'
+Hibernate: 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0 
+    where
+        upper(m1_0.title) like upper(?) escape '\\'
+hello sarfraz@gmail.com
+2026-03-05T02:34:08.977+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:08.988+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:08.991+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0 
+    where
+        upper(m1_0.title) like upper(?) escape '\\'
+Hibernate: 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0 
+    where
+        upper(m1_0.title) like upper(?) escape '\\'
+2026-03-05T02:34:09.029+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.034+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.037+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.040+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.043+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.047+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.050+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.052+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.055+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.058+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.061+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.063+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.066+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.068+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.071+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.075+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.078+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.080+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.083+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.086+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.089+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.092+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.094+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.098+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.101+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.104+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.108+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.111+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.114+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.115+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.117+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.120+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.122+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.123+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.125+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.127+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.129+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.130+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.133+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.135+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.137+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.139+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.141+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+hello sarfraz@gmail.com
+2026-03-05T02:34:09.174+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:09.185+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0
+Hibernate: 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views 
+    from
+        movie m1_0
+2026-03-05T02:34:09.199+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.203+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.205+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.206+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.208+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.209+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.212+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.215+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.217+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.218+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.220+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.222+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.223+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.225+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.226+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.229+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.231+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.232+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.234+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.236+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.237+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.239+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.241+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.242+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.244+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.246+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.248+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.249+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.250+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.252+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.253+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.254+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.256+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.257+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.259+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.261+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.264+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.267+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.269+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.272+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.274+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.277+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.278+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:09.281+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_cast cm1_0 
+    where
+        cm1_0.movie_id=?
+hello sarfraz@gmail.com
+hello sarfraz@gmail.com
+2026-03-05T02:34:21.678+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+2026-03-05T02:34:21.678+05:30 DEBUG 11112 --- [jwt] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+========================================
+? GET /api/v1/shows/by-movie/142
+2026-03-05T02:34:21.705+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        distinct s1_0.show_date 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date>=? 
+    order by
+        s1_0.show_date
+Hibernate: 
+    select
+        distinct s1_0.show_date 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date>=? 
+    order by
+        s1_0.show_date
+   Request Params:
+      city: 'Chennai'
+      date: 2026-03-05
+========================================
+? Route: city + date
+========================================
+? ShowService.getShowsByMovieAndCityAndDate
+   movieId: 142
+   city: 'Chennai'
+   date: 2026-03-05
+========================================
+2026-03-05T02:34:21.710+05:30 DEBUG 11112 --- [jwt] [io-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date=?
+Hibernate: 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date=?
+? Query returned 0 shows
+?? No shows found!
+?? Make sure theater.city = 'Chennai' in database
+========================================
+? Returning 0 shows to frontend
+========================================
+hello sarfraz@gmail.com
+2026-03-05T02:34:21.732+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+hello sarfraz@gmail.com
+2026-03-05T02:34:21.736+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+========================================
+? GET /api/v1/shows/by-movie/142
+   Request Params:
+      city: 'Chennai'
+      date: 2026-03-05
+========================================
+? Route: city + date
+========================================
+? ShowService.getShowsByMovieAndCityAndDate
+   movieId: 142
+   city: 'Chennai'
+   date: 2026-03-05
+========================================
+2026-03-05T02:34:21.747+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        distinct s1_0.show_date 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date>=? 
+    order by
+        s1_0.show_date
+Hibernate: 
+    select
+        distinct s1_0.show_date 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date>=? 
+    order by
+        s1_0.show_date
+2026-03-05T02:34:21.748+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date=?
+Hibernate: 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date=?
+? Query returned 0 shows
+?? No shows found!
+?? Make sure theater.city = 'Chennai' in database
+========================================
+? Returning 0 shows to frontend
+========================================
+hello sarfraz@gmail.com
+2026-03-05T02:34:25.878+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.bio,
+        u1_0.country,
+        u1_0.dob,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.image,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.phone_no,
+        u1_0.role,
+        u1_0.username 
+    from
+        user u1_0 
+    where
+        u1_0.email=?
+========================================
+? GET /api/v1/shows/by-movie/142
+   Request Params:
+      city: 'Chennai'
+      date: 2026-03-12
+========================================
+? Route: city + date
+========================================
+? ShowService.getShowsByMovieAndCityAndDate
+   movieId: 142
+   city: 'Chennai'
+   date: 2026-03-12
+========================================
+2026-03-05T02:34:25.889+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date=?
+Hibernate: 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    join
+        theater t1_0 
+            on t1_0.id=s1_0.theater_id 
+    where
+        s1_0.movie_id=? 
+        and t1_0.city=? 
+        and s1_0.show_date=?
+? Query returned 1 shows
+2026-03-05T02:34:25.907+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.capacity,
+        t1_0.city,
+        t1_0.contact_no,
+        t1_0.location,
+        t1_0.name,
+        t1_0.operating_hours,
+        t1_0.postal_code,
+        t1_0.screens,
+        t1_0.state 
+    from
+        theater t1_0 
+    where
+        t1_0.id=?
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.capacity,
+        t1_0.city,
+        t1_0.contact_no,
+        t1_0.location,
+        t1_0.name,
+        t1_0.operating_hours,
+        t1_0.postal_code,
+        t1_0.screens,
+        t1_0.state 
+    from
+        theater t1_0 
+    where
+        t1_0.id=?
+   ? Show: 3 | Theater: Sathyam Cinemas | City: Chennai
+========================================
+? Returning 1 shows to frontend
+========================================
+2026-03-05T02:34:25.922+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views,
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie m1_0 
+    left join
+        movie_cast cm1_0 
+            on m1_0.movie_id=cm1_0.movie_id 
+    where
+        m1_0.movie_id=?
+Hibernate: 
+    select
+        m1_0.movie_id,
+        m1_0.background_image_url,
+        m1_0.bookings,
+        m1_0.description,
+        m1_0.director,
+        m1_0.duration,
+        m1_0.featured,
+        m1_0.genre,
+        m1_0.language,
+        m1_0.post_url,
+        m1_0.price,
+        m1_0.rating,
+        m1_0.release_date,
+        m1_0.title,
+        m1_0.trailer,
+        m1_0.views,
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie m1_0 
+    left join
+        movie_cast cm1_0 
+            on m1_0.movie_id=cm1_0.movie_id 
+    where
+        m1_0.movie_id=?
+2026-03-05T02:34:25.925+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+Hibernate: 
+    select
+        cm1_0.movie_id,
+        cm1_0.image_url,
+        cm1_0.name,
+        cm1_0.role 
+    from
+        movie_crew cm1_0 
+    where
+        cm1_0.movie_id=?
+2026-03-05T02:34:25.935+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        t1_0.theater_id,
+        t1_0.time 
+    from
+        movie_times t1_0 
+    where
+        t1_0.theater_id=?
+Hibernate: 
+    select
+        t1_0.theater_id,
+        t1_0.time 
+    from
+        movie_times t1_0 
+    where
+        t1_0.theater_id=?
+2026-03-05T02:34:57.529+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    where
+        s1_0.show_id=?
+Hibernate: 
+    select
+        s1_0.show_id,
+        s1_0.available_seats,
+        s1_0.format,
+        s1_0.language,
+        s1_0.movie_id,
+        s1_0.price,
+        s1_0.screen_number,
+        s1_0.show_date,
+        s1_0.show_time,
+        s1_0.theater_id,
+        s1_0.total_seats 
+    from
+        shows s1_0 
+    where
+        s1_0.show_id=?
+2026-03-05T02:34:58.380+05:30 DEBUG 11112 --- [jwt] [nio-8080-exec-9] org.hibernate.SQL                        : 
+    insert 
+    into
+        bookings
+        (base_amount, booking_reference, confirmed_at, convenience_fee, created_at, number_of_seats, payment_status, razorpay_order_id, razorpay_payment_id, seat_labels, show_id, total_amount, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        bookings
+        (base_amount, booking_reference, confirmed_at, convenience_fee, created_at, number_of_seats, payment_status, razorpay_order_id, razorpay_payment_id, seat_labels, show_id, total_amount, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  07:50 min
+[INFO] Finished at: 2026-03-05T02:37:10+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.4.2:run (default-cli) on project jwt: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

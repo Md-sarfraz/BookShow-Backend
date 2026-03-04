@@ -66,8 +66,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,
                                 "/movie/**",
                                 "/events/**",
-                                "/theater/**"
+                                "/theater/**",
+                                "/shows/**",
+                                "/bookings/**"
                         ).permitAll()
+
+                        // Payment endpoints — permit all (security is handled via HMAC signature verification)
+                        .requestMatchers("/payment/**").permitAll()
 
                         // Role-based
                         .requestMatchers("/admin/**").hasRole("ADMIN")

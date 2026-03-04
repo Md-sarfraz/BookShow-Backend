@@ -63,7 +63,23 @@ public class UserService {
 
             String role = user.getRole().name();
             String token = jwtService.generateToken(user.getEmail(), role, user.getId());
-            return new LoginResponse(token, role);
+            
+            // Create LoginResponse with full user data
+            LoginResponse response = new LoginResponse();
+            response.setToken(token);
+            response.setRole(role);
+            response.setId(user.getId());
+            response.setUsername(user.getUsername());
+            response.setEmail(user.getEmail());
+            response.setFirstName(user.getFirstName());
+            response.setLastName(user.getLastName());
+            response.setDob(user.getDob() != null ? user.getDob().toString() : null);
+            response.setCountry(user.getCountry());
+            response.setPhoneNo(user.getPhoneNo());
+            response.setBio(user.getBio());
+            response.setImage(user.getImage());
+            
+            return response;
 
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid email or password");
