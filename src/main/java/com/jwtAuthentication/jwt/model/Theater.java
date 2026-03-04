@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Theater {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class Theater {
     private String name;
 
     @ElementCollection
-    @CollectionTable(name = "movie_times", joinColumns = @JoinColumn(name = "movieId"))
+    @CollectionTable(name = "movie_times", joinColumns = @JoinColumn(name = "theater_id"))
     @Column(name = "time")
     private List<String> time;
 
@@ -43,14 +44,7 @@ public class Theater {
     @Column
     private String operatingHours;
 
-//    @Column
-//    @OneToMany(mappedBy = "theater")
-//    private List<Movie>ListOfMovies;
-
-
-    @ManyToMany(mappedBy = "theaters")
-    @JsonIgnoreProperties("theaters")
-    private List<Movie> movies;
-
+    // Note: Theaters are connected to movies through the Show entity
+    // No direct relationship needed here
 
 }

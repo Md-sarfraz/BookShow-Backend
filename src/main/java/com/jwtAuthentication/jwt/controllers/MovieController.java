@@ -20,7 +20,8 @@ import java.util.List;
 public class MovieController {
     private final MovieService movieService;
     private final MovieMapper movieMapper;
-    public MovieController(MovieService movieService,MovieMapper movieMapper) {
+    
+    public MovieController(MovieService movieService, MovieMapper movieMapper) {
         this.movieService = movieService;
         this.movieMapper = movieMapper;
     }
@@ -51,8 +52,8 @@ public class MovieController {
 @PostMapping("/createMovie")
 public ResponseEntity<ApiResponse<Void>> addMovie(
         @RequestPart("movie") String movieJson,
-        @RequestPart("image") MultipartFile imageFile,
-        @RequestPart("backgroundImage") MultipartFile backgroundImageFile) {
+        @RequestPart(value = "image", required = false) MultipartFile imageFile,
+        @RequestPart(value = "backgroundImage", required = false) MultipartFile backgroundImageFile) {
 
     try {
         MovieRequestDto movieDto = objectMapper.readValue(movieJson, MovieRequestDto.class);
@@ -110,7 +111,7 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
     public List<Movie> filterMovies(@RequestParam(required = false) String language,
                                     @RequestParam(required = false) String genre,
                                     @RequestParam(required = false) String format) {
-        return movieService.filterMovies(language, genre,format);
+        return movieService.filterMovies(language, genre, format);
     }
 
 
@@ -154,6 +155,13 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
     public ResponseEntity<String> increaseBooking(@PathVariable Long id) {
         movieService.increaseBooking(id);
         return ResponseEntity.ok("Booking count increased");
+    }
+
+    @PatchMapping("/{id}/feature")
+    public ResponseEntity<ApiResponse<Movie>> featureMovie(@PathVariable int id) {
+        Movie movie = movieService.featureMovie(id);
+        ApiResponse<Movie> response = new ApiResponse<>(true, "Movie marked as featured", movie);
+        return ResponseEntity.ok(response);
     }
 //
 }

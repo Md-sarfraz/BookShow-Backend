@@ -25,4 +25,11 @@ public class CloudinaryImageController {
         Map<String, Object> data = cloudinaryImageService.upload(file, id);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/simple", consumes = "multipart/form-data")
+    public ResponseEntity<Map<String, Object>> uploadSimple(
+            @RequestParam("image") MultipartFile file) {
+        Map<String, Object> data = cloudinaryImageService.uploadSimple(file);
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
 }

@@ -42,15 +42,7 @@ public class MovieService {
         String backgroundImageUrl = uploadResultBg.get("secure_url").toString();
         movie.setBackgroundImageUrl(backgroundImageUrl);
 
-        // Associate theaters if provided
-        if (movie.getTheaters() != null && !movie.getTheaters().isEmpty()) {
-            List<Theater> validTheaters = movie.getTheaters().stream()
-                    .map(theater -> theaterRepository.findById(theater.getId())
-                            .orElseThrow(() -> new RuntimeException("Theater not found with ID: " + theater.getId())))
-                    .toList();
-            movie.setTheaters(validTheaters);
-        }
-
+        // Movies are now connected to theaters through Show entity, not directly
         return movieRepository.save(movie);
     }
 
@@ -137,19 +129,19 @@ public class MovieService {
 
     public List<Movie> filterMovies(String language, String genre, String format) {
         if (language != null && genre != null && format != null) {
-            return movieRepository.findByLanguageAndGenreAndFormat(language, genre, format);
+            return movieRepository.findByLanguageAndGenreAndShowFormat(language, genre, format);
+        } else if (language != null && format != null) {
+            return movieRepository.findByLanguageAndShowFormat(language, format);
+        } else if (genre != null && format != null) {
+            return movieRepository.findByGenreAndShowFormat(genre, format);
+        } else if (format != null) {
+            return movieRepository.findByShowFormat(format);
         } else if (language != null && genre != null) {
             return movieRepository.findByLanguageAndGenre(language, genre);
-        } else if (language != null && format != null) {
-            return movieRepository.findByLanguageAndFormat(language, format);
-        } else if (genre != null && format != null) {
-            return movieRepository.findByGenreAndFormat(genre, format);
         } else if (language != null) {
             return movieRepository.findByLanguage(language);
         } else if (genre != null) {
             return movieRepository.findByGenre(genre);
-        } else if (format != null) {
-            return movieRepository.findByFormat(format);
         } else {
             return movieRepository.findAll();
         }
@@ -203,6 +195,15 @@ public class MovieService {
 
         movie.setBookings(movie.getBookings() + 1);
         movieRepository.save(movie);
+    }
+
+    // ⭐ Feature movie
+    public Movie featureMovie(int movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("Movie not found with id " + movieId));
+        
+        movie.setFeatured(true);
+        return movieRepository.save(movie);
     }
 
 }

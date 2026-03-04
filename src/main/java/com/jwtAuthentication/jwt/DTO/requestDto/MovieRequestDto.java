@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.DTO.requestDto;
 
+import com.jwtAuthentication.jwt.model.Person;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,7 +12,6 @@ public class MovieRequestDto {
     private String title;
     private String description;
     private String genre;
-    private String format;
     private String duration;
     private String language;
     private Double price;
@@ -21,9 +21,10 @@ public class MovieRequestDto {
     private Double rating;
     private String director;
     private String trailer;
-    private List<String> castMember;
-    private List<TheaterDto> theaters; // ✅ Updated to list of theaters
     private Boolean featured;
+    private List<Person> castMember;
+    private List<Person> crewMember;
+    private List<TheaterDto> theaters; // ✅ Updated to list of theaters
 
     @Data
     public static class TheaterDto {

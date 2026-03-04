@@ -21,19 +21,28 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
 ////    // Filter by language
 //    List<Movie> findByLanguage(String language);
 //    List<Movie> findByLanguageAndGenre(String language, String genre);
-    List<Movie> findByLanguageAndGenreAndFormat(String language, String genre, String format);
     List<Movie> findByLanguageAndGenre(String language, String genre);
-    List<Movie> findByLanguageAndFormat(String language, String format);
-    List<Movie> findByGenreAndFormat(String genre, String format);
     List<Movie> findByLanguage(String language);
     List<Movie> findByGenre(String genre);
-    List<Movie> findByFormat(String format);
     List<Movie> findAll();
+
+    // Filter movies by show format (queries through Show entity)
+    @Query("SELECT DISTINCT m FROM Movie m JOIN Show s ON s.movie.movieId = m.movieId WHERE s.format = :format")
+    List<Movie> findByShowFormat(String format);
+
+    @Query("SELECT DISTINCT m FROM Movie m JOIN Show s ON s.movie.movieId = m.movieId WHERE m.language = :language AND s.format = :format")
+    List<Movie> findByLanguageAndShowFormat(String language, String format);
+
+    @Query("SELECT DISTINCT m FROM Movie m JOIN Show s ON s.movie.movieId = m.movieId WHERE m.genre = :genre AND s.format = :format")
+    List<Movie> findByGenreAndShowFormat(String genre, String format);
+
+    @Query("SELECT DISTINCT m FROM Movie m JOIN Show s ON s.movie.movieId = m.movieId WHERE m.language = :language AND m.genre = :genre AND s.format = :format")
+    List<Movie> findByLanguageAndGenreAndShowFormat(String language, String genre, String format);
 
     @Query("SELECT m FROM Movie m WHERE m.featured = true ORDER BY m.releaseDate DESC")
     List<Movie> findTopFeaturedMovies(Pageable pageable);
 
-    boolean existsByTheatersId(int theaterId);
+    // Theater-Movie connection now handled through Show entity
     List<Movie> findTop10ByOrderByViewsDesc();
 
     List<Movie> findTop10ByOrderByBookingsDesc();

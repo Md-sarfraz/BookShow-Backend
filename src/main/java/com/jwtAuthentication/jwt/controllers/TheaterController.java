@@ -39,11 +39,23 @@ public class TheaterController {
     }
 
     @GetMapping("/by-movie/{movieId}")
-    public ResponseEntity<List<Theater>> getTheatersByMovieId(@PathVariable int movieId) {
-        List<Theater> theaters = theaterService.findTheatersByMovieId(movieId);
+    public ResponseEntity<List<Theater>> getTheatersByMovieId(
+            @PathVariable int movieId,
+            @RequestParam(required = false) String city) {
+        
+        List<Theater> theaters;
+        if (city != null && !city.isEmpty()) {
+            theaters = theaterService.findTheatersByMovieIdAndCity(movieId, city);
+        } else {
+            theaters = theaterService.findTheatersByMovieId(movieId);
+        }
         return ResponseEntity.ok(theaters);
     }
 
-
+    @GetMapping("/by-city/{city}")
+    public ResponseEntity<List<Theater>> getTheatersByCity(@PathVariable String city) {
+        List<Theater> theaters = theaterService.findTheatersByCity(city);
+        return ResponseEntity.ok(theaters);
+    }
 
 }

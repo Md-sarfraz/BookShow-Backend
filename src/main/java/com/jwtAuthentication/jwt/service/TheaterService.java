@@ -2,6 +2,7 @@ package com.jwtAuthentication.jwt.service;
 
 import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
+import com.jwtAuthentication.jwt.repository.ShowRepository;
 import com.jwtAuthentication.jwt.repository.TheaterRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,12 @@ import java.util.List;
 public class TheaterService {
     private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
-    public TheaterService(TheaterRepository theaterRepository, MovieRepository movieRepository) {
+    private final ShowRepository showRepository;
+    
+    public TheaterService(TheaterRepository theaterRepository, MovieRepository movieRepository, ShowRepository showRepository) {
         this.theaterRepository = theaterRepository;
         this.movieRepository = movieRepository;
+        this.showRepository = showRepository;
     }
 
     public Theater createTheater(Theater theater) {
@@ -30,9 +34,9 @@ public class TheaterService {
     }
 
     public String deleteTheater(int id) {
-        boolean hasMovies = movieRepository.existsByTheatersId(id);
-        if (hasMovies) {
-            throw new IllegalStateException("Cannot delete theater. Movies are still assigned to it.");
+        boolean hasShows = showRepository.existsByTheaterId(id);
+        if (hasShows) {
+            throw new IllegalStateException("Cannot delete theater. Shows are still scheduled for it.");
         }
         theaterRepository.deleteById(id);
         return "Successfully deleted theater with id: " + id;
@@ -41,6 +45,14 @@ public class TheaterService {
 
     public List<Theater> findTheatersByMovieId(Integer movieId) {
         return theaterRepository.findTheatersByMovieId(movieId);
+    }
+
+    public List<Theater> findTheatersByMovieIdAndCity(Integer movieId, String city) {
+        return theaterRepository.findTheatersByMovieIdAndCity(movieId, city);
+    }
+
+    public List<Theater> findTheatersByCity(String city) {
+        return theaterRepository.findByCity(city);
     }
 
 }

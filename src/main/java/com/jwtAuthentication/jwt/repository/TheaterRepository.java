@@ -10,8 +10,14 @@ import java.util.List;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<Theater,Integer> {
-    @Query("SELECT t FROM Theater t JOIN t.movies m WHERE m.movieId = :movieId")
+    // Query theaters showing a specific movie (through Show entity)
+    @Query("SELECT DISTINCT t FROM Theater t JOIN Show s ON s.theater.id = t.id WHERE s.movie.movieId = :movieId")
     List<Theater> findTheatersByMovieId(@Param("movieId") Integer movieId);
 
+    // Query theaters showing a specific movie in a specific city (through Show entity)
+    @Query("SELECT DISTINCT t FROM Theater t JOIN Show s ON s.theater.id = t.id WHERE s.movie.movieId = :movieId AND t.city = :city")
+    List<Theater> findTheatersByMovieIdAndCity(@Param("movieId") Integer movieId, @Param("city") String city);
+
+    List<Theater> findByCity(String city);
 
 }

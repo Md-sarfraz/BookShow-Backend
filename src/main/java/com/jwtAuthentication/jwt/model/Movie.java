@@ -1,6 +1,5 @@
 package com.jwtAuthentication.jwt.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.NotBlank;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = "theater")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Movie {
     @Id
     @Column
@@ -32,9 +31,6 @@ public class Movie {
     private String genre;
 
     @Column
-    private String format;
-
-    @Column
     private String duration;
 
     @Column
@@ -49,7 +45,7 @@ public class Movie {
     @Column
     private String postUrl;
     @Column
-    private Boolean featured;
+    private Boolean featured = false;
 
     @Column
     private String backgroundImageUrl;
@@ -69,25 +65,15 @@ public class Movie {
 //            message = "Invalid YouTube URL format")
     private String trailer;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "movie_cast", joinColumns = @JoinColumn(name = "movie_id"))
-    @Column
-    private List<String>castMember;
+    private List<Person> castMember;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "movie_crew", joinColumns = @JoinColumn(name = "movie_id"))
+    private List<Person> crewMember;
 
-//    @ManyToOne
-//    @JoinColumn(name = "theater_id")
-//    @JsonIgnore
-//    private Theater theater;
-
-    @ManyToMany
-
-    @JoinTable(
-            name = "movie_theater",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "theater_id")
-    )
-    @JsonIgnore
-    private List<Theater> theaters;
+    // Note: Movies are connected to theaters through the Show entity
+    // No direct relationship needed here
 
 }

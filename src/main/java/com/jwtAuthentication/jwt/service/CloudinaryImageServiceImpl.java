@@ -32,4 +32,22 @@ public class CloudinaryImageServiceImpl implements CloudinaryImageService {
             throw new RuntimeException("image upload failed");
         }
     }
+
+    @Override
+    public Map uploadSimple(MultipartFile file) {
+        try {
+            Map data = this.cloudinary.uploader().upload(file.getBytes(), Map.of());
+            String imageUrl = (String) data.get("secure_url");
+            String url = (String) data.get("url");
+            
+            return Map.of(
+                "success", true,
+                "secure_url", imageUrl != null ? imageUrl : "",
+                "url", url != null ? url : "",
+                "imageUrl", imageUrl != null ? imageUrl : url
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Image upload failed: " + e.getMessage());
+        }
+    }
 }

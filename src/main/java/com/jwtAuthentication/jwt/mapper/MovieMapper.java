@@ -24,7 +24,6 @@ public class MovieMapper {
         movie.setTitle(dto.getTitle());
         movie.setDescription(dto.getDescription());
         movie.setGenre(dto.getGenre());
-        movie.setFormat(dto.getFormat());
         movie.setDuration(dto.getDuration());
         movie.setLanguage(dto.getLanguage());
         movie.setPrice(dto.getPrice());
@@ -34,19 +33,11 @@ public class MovieMapper {
         movie.setDirector(dto.getDirector());
         movie.setTrailer(dto.getTrailer());
         movie.setCastMember(dto.getCastMember());
+        movie.setCrewMember(dto.getCrewMember());
         movie.setFeatured(dto.getFeatured());
         movie.setBackgroundImageUrl(dto.getBackgroundImageUrl());
 
-        // Handle theaters (many-to-many)
-        if (dto.getTheaters() != null) {
-            List<Theater> theaters = dto.getTheaters().stream().map(theaterDto -> {
-                Theater theater = new Theater();
-                theater.setId(theaterDto.getId());
-                return theater;
-            }).collect(Collectors.toList());
-            movie.setTheaters(theaters);
-        }
-
+        // Movies are now connected to theaters through Show entity, not directly
         return movie;
     }
 
@@ -60,7 +51,6 @@ public class MovieMapper {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setGenre(entity.getGenre());
-        dto.setFormat(entity.getFormat());
         dto.setDuration(entity.getDuration());
         dto.setLanguage(entity.getLanguage());
         dto.setPrice(entity.getPrice());
@@ -70,19 +60,11 @@ public class MovieMapper {
         dto.setDirector(entity.getDirector());
         dto.setTrailer(entity.getTrailer());
         dto.setCastMember(entity.getCastMember());
+        dto.setCrewMember(entity.getCrewMember());
         dto.setFeatured(entity.getFeatured());
         dto.setBackgroundImageUrl(entity.getBackgroundImageUrl());
 
-        // Handle theaters (many-to-many)
-        if (entity.getTheaters() != null) {
-            List<MovieRequestDto.TheaterDto> theaterDtos = entity.getTheaters().stream().map(theater -> {
-                MovieRequestDto.TheaterDto theaterDto = new MovieRequestDto.TheaterDto();
-                theaterDto.setId(theater.getId());
-                return theaterDto;
-            }).collect(Collectors.toList());
-            dto.setTheaters(theaterDtos);
-        }
-
+        // Movies are now connected to theaters through Show entity, not directly
         return dto;
     }
 
