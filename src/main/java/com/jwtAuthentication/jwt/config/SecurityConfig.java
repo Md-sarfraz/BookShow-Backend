@@ -59,7 +59,8 @@ public class SecurityConfig {
                         // Auth APIs
                         .requestMatchers(
                                 "/auth/register",
-                                "/auth/login"
+                                "/auth/login",
+                                "/health"
                         ).permitAll()
 
                         // Public GET APIs only
