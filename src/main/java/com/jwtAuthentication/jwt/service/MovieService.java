@@ -3,6 +3,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.jwtAuthentication.jwt.DTO.requestDto.MovieRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
+import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
@@ -24,10 +25,13 @@ public class MovieService {
     private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
     private final Cloudinary cloudinary;
-    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository, Cloudinary cloudinary) {
+    private final ActivityService activityService;
+    
+    public MovieService(MovieRepository movieRepository, TheaterRepository theaterRepository, Cloudinary cloudinary, ActivityService activityService) {
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
         this.cloudinary = cloudinary;
+        this.activityService = activityService;
     }
 
 
@@ -43,7 +47,18 @@ public class MovieService {
         movie.setBackgroundImageUrl(backgroundImageUrl);
 
         // Movies are now connected to theaters through Show entity, not directly
-        return movieRepository.save(movie);
+        Movie savedMovie = movieRepository.save(movie);
+        
+        // Log activity
+        activityService.logActivity(
+            Activity.ActivityType.MOVIE_ADDED,
+            "Added a new movie '" + savedMovie.getTitle() + "' to the catalog",
+            savedMovie.getTitle(),
+            Long.valueOf(savedMovie.getMovieId()),
+            savedMovie.getGenre() + " | " + savedMovie.getLanguage()
+        );
+        
+        return savedMovie;
     }
 
 

@@ -13,4 +13,10 @@ public class AdminDashboardResponseDTO {
     private long totalTheaters;
     private long totalUsers;
     private long totalEvents;
+    private long totalBookings;
+    private long todayBookings;
+    private double totalRevenue;
+    private double todayRevenue;
+    private long todayShows;
+    private long seatsSoldToday;
 }

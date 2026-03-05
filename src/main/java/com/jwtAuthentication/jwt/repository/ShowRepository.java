@@ -47,6 +47,9 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
     // Get distinct dates for a movie in a city
     @Query("SELECT DISTINCT s.showDate FROM Show s WHERE s.movie.movieId = :movieId AND s.theater.city = :city AND s.showDate >= :fromDate ORDER BY s.showDate")
     List<LocalDate> findDistinctDatesByMovieAndCity(@Param("movieId") int movieId, @Param("city") String city, @Param("fromDate") LocalDate fromDate);
+
+    // Count today's shows
+    long countByShowDate(LocalDate showDate);
     
     // Check if theater has any shows
     boolean existsByTheaterId(int theaterId);

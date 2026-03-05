@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.service;
 
+import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.model.Show;
 import com.jwtAuthentication.jwt.model.Theater;
@@ -25,6 +26,9 @@ public class ShowService {
     @Autowired
     private TheaterRepository theaterRepository;
     
+    @Autowired
+    private ActivityService activityService;
+    
     // Create a new show
     public Show createShow(Show show) {
         return showRepository.save(show);
@@ -38,7 +42,18 @@ public class ShowService {
         if (movie.isPresent() && theater.isPresent()) {
             show.setMovie(movie.get());
             show.setTheater(theater.get());
-            return showRepository.save(show);
+            Show savedShow = showRepository.save(show);
+            
+            // Log activity
+            activityService.logActivity(
+                Activity.ActivityType.SHOW_CREATED,
+                "Scheduled show for '" + movie.get().getTitle() + "' at " + theater.get().getName() + ", Screen " + show.getScreenNumber(),
+                movie.get().getTitle(),
+                savedShow.getShowId(),
+                "Theater: " + theater.get().getName() + " | Date: " + show.getShowDate() + " | Time: " + show.getShowTime()
+            );
+            
+            return savedShow;
         }
         throw new RuntimeException("Movie or Theater not found");
     }

@@ -3,6 +3,7 @@ package com.jwtAuthentication.jwt.service;
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
 import com.jwtAuthentication.jwt.DTO.requestDto.SignUpRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
+import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Role;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
@@ -29,17 +30,20 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
+    private final ActivityService activityService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public UserService(JwtService jwtService,
                        PasswordEncoder passwordEncoder,
                        UserRepository userRepository,
-                       AuthenticationManager authenticationManager) {
+                       AuthenticationManager authenticationManager,
+                       ActivityService activityService) {
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
+        this.activityService = activityService;
     }
 
     /* ========================= LOGIN ========================= */
@@ -107,7 +111,16 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        
+        // Log activity
+        activityService.logActivity(
+            Activity.ActivityType.USER_REGISTERED,
+            "New user '" + savedUser.getUsername() + "' registered to the platform",
+            savedUser.getUsername(),
+            Long.valueOf(savedUser.getId()),
+            savedUser.getEmail()
+        );
     }
 
 

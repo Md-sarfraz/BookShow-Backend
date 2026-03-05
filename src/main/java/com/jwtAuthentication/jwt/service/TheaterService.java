@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.service;
 
+import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
 import com.jwtAuthentication.jwt.repository.ShowRepository;
@@ -13,15 +14,28 @@ public class TheaterService {
     private final TheaterRepository theaterRepository;
     private final MovieRepository movieRepository;
     private final ShowRepository showRepository;
+    private final ActivityService activityService;
     
-    public TheaterService(TheaterRepository theaterRepository, MovieRepository movieRepository, ShowRepository showRepository) {
+    public TheaterService(TheaterRepository theaterRepository, MovieRepository movieRepository, ShowRepository showRepository, ActivityService activityService) {
         this.theaterRepository = theaterRepository;
         this.movieRepository = movieRepository;
         this.showRepository = showRepository;
+        this.activityService = activityService;
     }
 
     public Theater createTheater(Theater theater) {
-        return theaterRepository.save(theater);
+        Theater savedTheater = theaterRepository.save(theater);
+        
+        // Log activity
+        activityService.logActivity(
+            Activity.ActivityType.THEATER_ADDED,
+            "New theater '" + savedTheater.getName() + "' registered in " + savedTheater.getCity(),
+            savedTheater.getName(),
+            Long.valueOf(savedTheater.getId()),
+            "City: " + savedTheater.getCity() + " | Location: " + savedTheater.getLocation()
+        );
+        
+        return savedTheater;
     }
 
     public List<Theater> getAllTheaters() {
