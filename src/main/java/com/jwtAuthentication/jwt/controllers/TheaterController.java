@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/theater")
@@ -21,6 +22,14 @@ public class TheaterController {
     public ResponseEntity<Theater> createTheater(@RequestBody Theater theater) {
         Theater createdTheater = theaterService.createTheater(theater);
         return ResponseEntity.ok(createdTheater);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<Theater>> createBulkTheaters(@RequestBody List<Theater> theaters) {
+        List<Theater> saved = theaters.stream()
+                .map(theaterService::createTheater)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/all")
