@@ -13,6 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_theater_name_location", columnNames = {"name", "location"})
+})
 public class Theater {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

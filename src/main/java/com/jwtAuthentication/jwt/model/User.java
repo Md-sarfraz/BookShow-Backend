@@ -15,12 +15,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    @Column
+    @Column(unique = true)
     String username;
     @Column
     @JsonIgnore
     String password;
-    @Column
+    @Column(unique = true)
     String email;
     @Column
     String firstName;

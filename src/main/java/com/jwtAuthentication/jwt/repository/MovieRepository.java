@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie,Integer> {
 
-    // Search by title (Case Insensitive)
-    List<Movie> findByTitleContainingIgnoreCase(String title);
+    // Duplicate check: same title + language
+    boolean existsByTitleIgnoreCaseAndLanguageIgnoreCase(String title, String language);
 
     // Filter by genre
 //    List<Movie> findByGenre(String genre);
@@ -49,6 +49,7 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
 
     List<Movie> findTop10ByOrderByRatingDesc();
 
+    List<Movie> findByTitleContainingIgnoreCase(String title);
 
     // Find movies released after a specific date
 //    List<Movie> findByReleaseDateAfter(LocalDate date);

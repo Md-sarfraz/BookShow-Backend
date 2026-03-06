@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.service;
 
+import com.jwtAuthentication.jwt.execption.DuplicateResourceException;
 import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.model.Show;
@@ -40,6 +41,15 @@ public class ShowService {
         Optional<Theater> theater = theaterRepository.findById(theaterId);
         
         if (movie.isPresent() && theater.isPresent()) {
+            // Duplicate check: same movie + theater + date + time + screen
+            if (showRepository.existsByMovieMovieIdAndTheaterIdAndShowDateAndShowTimeAndScreenNumber(
+                    movieId, theaterId, show.getShowDate(), show.getShowTime(), show.getScreenNumber())) {
+                throw new DuplicateResourceException(
+                        "A show for '" + movie.get().getTitle() + "' at theater '" + theater.get().getName() +
+                        "' on " + show.getShowDate() + " at " + show.getShowTime() +
+                        " (Screen " + show.getScreenNumber() + ") already exists.");
+            }
+
             show.setMovie(movie.get());
             show.setTheater(theater.get());
             Show savedShow = showRepository.save(show);

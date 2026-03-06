@@ -3,6 +3,7 @@ package com.jwtAuthentication.jwt.service;
 import com.jwtAuthentication.jwt.DTO.requestDto.LoginRequest;
 import com.jwtAuthentication.jwt.DTO.requestDto.SignUpRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
+import com.jwtAuthentication.jwt.execption.DuplicateResourceException;
 import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Role;
 import com.jwtAuthentication.jwt.model.User;
@@ -102,7 +103,11 @@ public class UserService {
     public void saveUser(SignUpRequestDto request) {
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already registered");
+            throw new DuplicateResourceException("Email '" + request.getEmail() + "' is already registered.");
+        }
+
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new DuplicateResourceException("Username '" + request.getUsername() + "' is already taken.");
         }
 
         User user = new User();

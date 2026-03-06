@@ -14,7 +14,10 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "shows")
+@Table(name = "shows", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_show_movie_theater_date_time_screen",
+                columnNames = {"movie_id", "theater_id", "showDate", "showTime", "screenNumber"})
+})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Show {
     @Id

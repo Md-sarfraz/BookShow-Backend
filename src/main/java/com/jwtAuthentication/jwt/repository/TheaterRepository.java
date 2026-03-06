@@ -10,6 +10,10 @@ import java.util.List;
 
 @Repository
 public interface TheaterRepository extends JpaRepository<Theater,Integer> {
+
+    // Duplicate check: same name + location
+    boolean existsByNameIgnoreCaseAndLocationIgnoreCase(String name, String location);
+
     // Query theaters showing a specific movie (through Show entity)
     @Query("SELECT DISTINCT t FROM Theater t JOIN Show s ON s.theater.id = t.id WHERE s.movie.movieId = :movieId")
     List<Theater> findTheatersByMovieId(@Param("movieId") Integer movieId);

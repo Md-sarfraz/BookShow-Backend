@@ -7,11 +7,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public interface ShowRepository extends JpaRepository<Show, Long> {
-    
+
+    // Duplicate check: same movie + theater + date + time + screen
+    boolean existsByMovieMovieIdAndTheaterIdAndShowDateAndShowTimeAndScreenNumber(
+            int movieId, int theaterId, LocalDate showDate, LocalTime showTime, String screenNumber);
+
     // Find shows by movie ID
     List<Show> findByMovieMovieId(int movieId);
     

@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event,Integer> {
+
+    // Duplicate check: same title + date + location
+    boolean existsByTitleIgnoreCaseAndDateAndLocationIgnoreCase(String title, String date, String location);
 }

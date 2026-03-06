@@ -2,6 +2,8 @@ package com.jwtAuthentication.jwt.controllers;
 
 import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.service.TheaterService;
+import com.jwtAuthentication.jwt.util.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,52 +21,57 @@ public class TheaterController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<Theater> createTheater(@RequestBody Theater theater) {
+    public ResponseEntity<ApiResponse<Theater>> createTheater(@RequestBody Theater theater) {
         Theater createdTheater = theaterService.createTheater(theater);
-        return ResponseEntity.ok(createdTheater);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Theater created successfully", createdTheater));
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<List<Theater>> createBulkTheaters(@RequestBody List<Theater> theaters) {
+    public ResponseEntity<ApiResponse<List<Theater>>> createBulkTheaters(@RequestBody List<Theater> theaters) {
         List<Theater> saved = theaters.stream()
                 .map(theaterService::createTheater)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "Theaters created successfully", saved));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Theater>> getAllTheaters() {
-        return ResponseEntity.ok(theaterService.getAllTheaters());
+    public ResponseEntity<ApiResponse<List<Theater>>> getAllTheaters() {
+        List<Theater> theaters = theaterService.getAllTheaters();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Theaters fetched successfully", theaters));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Theater> getTheaterById(@PathVariable int id) {
-        return ResponseEntity.ok(theaterService.getTheaterById(id));
+    public ResponseEntity<ApiResponse<Theater>> getTheaterById(@PathVariable int id) {
+        Theater theater = theaterService.getTheaterById(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Theater fetched successfully", theater));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteTheater(@PathVariable int id) {
-        return ResponseEntity.ok( theaterService.deleteTheater(id));
+    public ResponseEntity<ApiResponse<Void>> deleteTheater(@PathVariable int id) {
+        theaterService.deleteTheater(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Theater deleted successfully", null));
     }
 
     @GetMapping("/by-movie/{movieId}")
-    public ResponseEntity<List<Theater>> getTheatersByMovieId(
+    public ResponseEntity<ApiResponse<List<Theater>>> getTheatersByMovieId(
             @PathVariable int movieId,
             @RequestParam(required = false) String city) {
-        
+
         List<Theater> theaters;
         if (city != null && !city.isEmpty()) {
             theaters = theaterService.findTheatersByMovieIdAndCity(movieId, city);
         } else {
             theaters = theaterService.findTheatersByMovieId(movieId);
         }
-        return ResponseEntity.ok(theaters);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Theaters fetched successfully", theaters));
     }
 
     @GetMapping("/by-city/{city}")
-    public ResponseEntity<List<Theater>> getTheatersByCity(@PathVariable String city) {
+    public ResponseEntity<ApiResponse<List<Theater>>> getTheatersByCity(@PathVariable String city) {
         List<Theater> theaters = theaterService.findTheatersByCity(city);
-        return ResponseEntity.ok(theaters);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Theaters fetched successfully", theaters));
     }
 
 }

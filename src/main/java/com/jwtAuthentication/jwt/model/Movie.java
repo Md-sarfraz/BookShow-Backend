@@ -14,6 +14,9 @@ import java.util.List;
 @Entity
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_movie_title_language", columnNames = {"title", "language"})
+})
 public class Movie {
     @Id
     @Column

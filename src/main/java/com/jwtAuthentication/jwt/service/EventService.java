@@ -3,6 +3,7 @@ package com.jwtAuthentication.jwt.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.jwtAuthentication.jwt.DTO.requestDto.EventRequestDto;
+import com.jwtAuthentication.jwt.execption.DuplicateResourceException;
 import com.jwtAuthentication.jwt.mapper.EventMapper;
 import com.jwtAuthentication.jwt.model.Event;
 import com.jwtAuthentication.jwt.repository.EventRepository;
@@ -30,6 +31,12 @@ public class EventService {
 
     // Create Event
     public Event saveEvent(Event event, MultipartFile imageFile, MultipartFile backgroundImageFile) throws IOException, IOException {
+        // Duplicate check: same title + date + location
+        if (eventRepository.existsByTitleIgnoreCaseAndDateAndLocationIgnoreCase(
+                event.getTitle(), event.getDate(), event.getLocation())) {
+            throw new DuplicateResourceException(
+                    "Event '" + event.getTitle() + "' on '" + event.getDate() + "' at '" + event.getLocation() + "' already exists.");
+        }
 
         // Upload main image to Cloudinary
         Map uploadResultMain = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());

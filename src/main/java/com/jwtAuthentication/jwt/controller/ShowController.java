@@ -2,6 +2,7 @@ package com.jwtAuthentication.jwt.controller;
 
 import com.jwtAuthentication.jwt.model.Show;
 import com.jwtAuthentication.jwt.service.ShowService;
+import com.jwtAuthentication.jwt.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -22,100 +23,96 @@ public class ShowController {
     
     // Create a new show (Admin only)
     @PostMapping("/create")
-    public ResponseEntity<?> createShow(@RequestBody Show show) {
+    public ResponseEntity<ApiResponse<Show>> createShow(@RequestBody Show show) {
         try {
             Show createdShow = showService.createShow(show);
-            return ResponseEntity.ok(createdShow);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Show created successfully", createdShow));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating show: " + e.getMessage());
+                    .body(new ApiResponse<>(false, "Error creating show: " + e.getMessage(), null));
         }
     }
     
     // Create show by movie and theater IDs
     @PostMapping("/create/{movieId}/{theaterId}")
-    public ResponseEntity<?> createShowByIds(
+    public ResponseEntity<ApiResponse<Show>> createShowByIds(
             @PathVariable int movieId,
             @PathVariable int theaterId,
             @RequestBody Show show) {
         try {
             Show createdShow = showService.createShow(movieId, theaterId, show);
-            return ResponseEntity.ok(createdShow);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse<>(true, "Show created successfully", createdShow));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error creating show: " + e.getMessage());
+                    .body(new ApiResponse<>(false, "Error creating show: " + e.getMessage(), null));
         }
     }
     
     // Get all shows
     @GetMapping
-    public ResponseEntity<List<Show>> getAllShows() {
+    public ResponseEntity<ApiResponse<List<Show>>> getAllShows() {
         List<Show> shows = showService.getAllShows();
-        return ResponseEntity.ok(shows);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Shows fetched successfully", shows));
     }
     
     // Get show by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getShowById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Show>> getShowById(@PathVariable Long id) {
         Optional<Show> show = showService.getShowById(id);
         if (show.isPresent()) {
-            return ResponseEntity.ok(show.get());
+            return ResponseEntity.ok(new ApiResponse<>(true, "Show fetched successfully", show.get()));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Show not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiResponse<>(false, "Show not found", null));
     }
     
     // Get shows by movie (with optional city and date filters)
     @GetMapping("/by-movie/{movieId}")
-    public ResponseEntity<List<Show>> getShowsByMovie(
+    public ResponseEntity<ApiResponse<List<Show>>> getShowsByMovie(
             @PathVariable int movieId,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         
         System.out.println("========================================");
         System.out.println("📋 GET /api/v1/shows/by-movie/" + movieId);
-        System.out.println("   Request Params:");
-        System.out.println("      city: " + (city != null ? "'" + city + "'" : "null"));
-        System.out.println("      date: " + (date != null ? date : "null"));
+        System.out.println("   city: " + city + ", date: " + date);
         System.out.println("========================================");
         
         List<Show> shows;
         
         if (city != null && date != null) {
-            System.out.println("🔀 Route: city + date");
             shows = showService.getShowsByMovieAndCityAndDate(movieId, city, date);
         } else if (city != null) {
-            System.out.println("🔀 Route: city only");
             shows = showService.getShowsByMovieAndCity(movieId, city);
         } else if (date != null) {
-            System.out.println("🔀 Route: date only");
             shows = showService.getShowsByMovieAndDate(movieId, date);
         } else {
-            System.out.println("🔀 Route: no filters");
             shows = showService.getShowsByMovie(movieId);
         }
         
         System.out.println("📤 Returning " + shows.size() + " shows to frontend");
-        System.out.println("========================================");
-        return ResponseEntity.ok(shows);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Shows fetched successfully", shows));
     }
     
     // Get upcoming shows for a movie
     @GetMapping("/upcoming/{movieId}")
-    public ResponseEntity<List<Show>> getUpcomingShows(@PathVariable int movieId) {
+    public ResponseEntity<ApiResponse<List<Show>>> getUpcomingShows(@PathVariable int movieId) {
         List<Show> shows = showService.getUpcomingShowsByMovie(movieId);
-        return ResponseEntity.ok(shows);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Upcoming shows fetched successfully", shows));
     }
     
     // Get available shows (with seats) for a movie
     @GetMapping("/available/{movieId}")
-    public ResponseEntity<List<Show>> getAvailableShows(@PathVariable int movieId) {
+    public ResponseEntity<ApiResponse<List<Show>>> getAvailableShows(@PathVariable int movieId) {
         List<Show> shows = showService.getAvailableShowsByMovie(movieId);
-        return ResponseEntity.ok(shows);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Available shows fetched successfully", shows));
     }
     
     // Get shows by theater and date
     @GetMapping("/by-theater/{theaterId}")
-    public ResponseEntity<List<Show>> getShowsByTheater(
+    public ResponseEntity<ApiResponse<List<Show>>> getShowsByTheater(
             @PathVariable int theaterId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         
@@ -125,13 +122,12 @@ public class ShowController {
         } else {
             shows = showService.getShowsByTheaterAndDate(theaterId, LocalDate.now());
         }
-        
-        return ResponseEntity.ok(shows);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Shows fetched successfully", shows));
     }
     
     // Get available dates for a movie
     @GetMapping("/dates/{movieId}")
-    public ResponseEntity<List<LocalDate>> getAvailableDates(
+    public ResponseEntity<ApiResponse<List<LocalDate>>> getAvailableDates(
             @PathVariable int movieId,
             @RequestParam(required = false) String city) {
         
@@ -141,59 +137,58 @@ public class ShowController {
         } else {
             dates = showService.getAvailableDatesForMovie(movieId);
         }
-        
-        return ResponseEntity.ok(dates);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Available dates fetched successfully", dates));
     }
     
     // Update show (Admin only)
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateShow(@PathVariable Long id, @RequestBody Show show) {
+    public ResponseEntity<ApiResponse<Show>> updateShow(@PathVariable Long id, @RequestBody Show show) {
         try {
             Show updatedShow = showService.updateShow(id, show);
-            return ResponseEntity.ok(updatedShow);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Show updated successfully", updatedShow));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Error updating show: " + e.getMessage());
+                    .body(new ApiResponse<>(false, "Error updating show: " + e.getMessage(), null));
         }
     }
     
     // Book seats
     @PostMapping("/book/{showId}/{numberOfSeats}")
-    public ResponseEntity<?> bookSeats(
+    public ResponseEntity<ApiResponse<Show>> bookSeats(
             @PathVariable Long showId,
             @PathVariable int numberOfSeats) {
         try {
             Show updatedShow = showService.bookSeats(showId, numberOfSeats);
-            return ResponseEntity.ok(updatedShow);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Seats booked successfully", updatedShow));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error booking seats: " + e.getMessage());
+                    .body(new ApiResponse<>(false, "Error booking seats: " + e.getMessage(), null));
         }
     }
     
     // Cancel booking
     @PostMapping("/cancel/{showId}/{numberOfSeats}")
-    public ResponseEntity<?> cancelBooking(
+    public ResponseEntity<ApiResponse<Show>> cancelBooking(
             @PathVariable Long showId,
             @PathVariable int numberOfSeats) {
         try {
             Show updatedShow = showService.cancelBooking(showId, numberOfSeats);
-            return ResponseEntity.ok(updatedShow);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Booking cancelled successfully", updatedShow));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error canceling booking: " + e.getMessage());
+                    .body(new ApiResponse<>(false, "Error canceling booking: " + e.getMessage(), null));
         }
     }
     
     // Delete show (Admin only)
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteShow(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteShow(@PathVariable Long id) {
         try {
             showService.deleteShow(id);
-            return ResponseEntity.ok("Show deleted successfully");
+            return ResponseEntity.ok(new ApiResponse<>(true, "Show deleted successfully", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Error deleting show: " + e.getMessage());
+                    .body(new ApiResponse<>(false, "Error deleting show: " + e.getMessage(), null));
         }
     }
 }

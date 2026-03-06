@@ -3,6 +3,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.jwtAuthentication.jwt.DTO.requestDto.MovieRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.MovieResponseDto;
+import com.jwtAuthentication.jwt.execption.DuplicateResourceException;
 import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Movie;
 import com.jwtAuthentication.jwt.model.Theater;
@@ -36,6 +37,12 @@ public class MovieService {
 
 
     public Movie saveMovie(Movie movie, MultipartFile imageFile, MultipartFile backgroundImageFile) throws IOException {
+        // Duplicate check: same title + language
+        if (movieRepository.existsByTitleIgnoreCaseAndLanguageIgnoreCase(movie.getTitle(), movie.getLanguage())) {
+            throw new DuplicateResourceException(
+                    "Movie '" + movie.getTitle() + "' in language '" + movie.getLanguage() + "' already exists.");
+        }
+
         // Upload main image to Cloudinary
         Map uploadResultMain = cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.emptyMap());
         String imageUrl = uploadResultMain.get("secure_url").toString();

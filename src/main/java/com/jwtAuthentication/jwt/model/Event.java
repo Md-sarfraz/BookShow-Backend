@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_event_title_date_location", columnNames = {"title", "date", "location"})
+})
 public class Event {
 
     @Id

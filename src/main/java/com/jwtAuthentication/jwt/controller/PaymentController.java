@@ -2,13 +2,12 @@ package com.jwtAuthentication.jwt.controller;
 
 import com.jwtAuthentication.jwt.DTO.*;
 import com.jwtAuthentication.jwt.service.PaymentService;
+import com.jwtAuthentication.jwt.util.ApiResponse;
 import com.razorpay.RazorpayException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/payment")
@@ -26,23 +25,23 @@ public class PaymentController {
      * Body: { "showId": 1, "seatLabels": ["A1", "A2"], "userId": 5 }
      */
     @PostMapping("/create-order")
-    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<ApiResponse<CreateOrderResponse>> createOrder(@RequestBody CreateOrderRequest request) {
         try {
             if (request.getShowId() == null || request.getSeatLabels() == null
                     || request.getSeatLabels().isEmpty()) {
                 return ResponseEntity.badRequest()
-                        .body(Map.of("error", "showId and seatLabels are required"));
+                        .body(new ApiResponse<>(false, "showId and seatLabels are required", null));
             }
 
-            CreateOrderResponse response = paymentService.createOrder(request);
-            return ResponseEntity.ok(response);
+            CreateOrderResponse orderResponse = paymentService.createOrder(request);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Order created successfully", orderResponse));
 
         } catch (RazorpayException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(Map.of("error", "Failed to create payment order: " + e.getMessage()));
+                    .body(new ApiResponse<>(false, "Failed to create payment order: " + e.getMessage(), null));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
 
@@ -55,26 +54,26 @@ public class PaymentController {
      * Body: { "razorpayOrderId": "order_xxx", "razorpayPaymentId": "pay_xxx", "razorpaySignature": "..." }
      */
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyPayment(@RequestBody PaymentVerificationRequest request) {
+    public ResponseEntity<ApiResponse<BookingConfirmationResponse>> verifyPayment(@RequestBody PaymentVerificationRequest request) {
         try {
             if (request.getRazorpayOrderId() == null || request.getRazorpayPaymentId() == null
                     || request.getRazorpaySignature() == null) {
                 return ResponseEntity.badRequest()
-                        .body(Map.of("error", "razorpayOrderId, razorpayPaymentId and razorpaySignature are required"));
+                        .body(new ApiResponse<>(false, "razorpayOrderId, razorpayPaymentId and razorpaySignature are required", null));
             }
 
             BookingConfirmationResponse confirmation = paymentService.verifyAndConfirmPayment(request);
-            return ResponseEntity.ok(confirmation);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Payment verified and booking confirmed", confirmation));
 
         } catch (SecurityException e) {
             // Signature mismatch — log and reject
             System.err.println("🚨 SECURITY ALERT: Payment signature verification failed for order: "
                     + request.getRazorpayOrderId());
             return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED)
-                    .body(Map.of("error", "Payment verification failed. Please contact support."));
+                    .body(new ApiResponse<>(false, "Payment verification failed. Please contact support.", null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Payment verification error: " + e.getMessage()));
+                    .body(new ApiResponse<>(false, "Payment verification error: " + e.getMessage(), null));
         }
     }
 }

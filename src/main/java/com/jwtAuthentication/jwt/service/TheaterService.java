@@ -1,5 +1,6 @@
 package com.jwtAuthentication.jwt.service;
 
+import com.jwtAuthentication.jwt.execption.DuplicateResourceException;
 import com.jwtAuthentication.jwt.model.Activity;
 import com.jwtAuthentication.jwt.model.Theater;
 import com.jwtAuthentication.jwt.repository.MovieRepository;
@@ -24,6 +25,12 @@ public class TheaterService {
     }
 
     public Theater createTheater(Theater theater) {
+        // Duplicate check: same name + location
+        if (theaterRepository.existsByNameIgnoreCaseAndLocationIgnoreCase(theater.getName(), theater.getLocation())) {
+            throw new DuplicateResourceException(
+                    "Theater '" + theater.getName() + "' at '" + theater.getLocation() + "' already exists.");
+        }
+
         Theater savedTheater = theaterRepository.save(theater);
         
         // Log activity

@@ -78,8 +78,9 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
 
 
     @DeleteMapping("/deleteMovie/{id}")
-    public String deleteMovie( @PathVariable int id) {
-        return movieService.deleteMovie(id);
+    public ResponseEntity<ApiResponse<Void>> deleteMovie(@PathVariable int id) {
+        movieService.deleteMovie(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Movie deleted successfully", null));
     }
     @PutMapping("/update/{movieId}")
     public ResponseEntity<ApiResponse<MovieResponseDto>> updateMovie(@RequestBody MovieRequestDto movieRequestDto, @PathVariable int movieId) {
@@ -95,24 +96,28 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
     }
 
     @GetMapping("/findAllMovie")
-    public List<Movie> findAllMovie(){
-        return movieService.findAllMovie();
+    public ResponseEntity<ApiResponse<List<Movie>>> findAllMovie() {
+        List<Movie> movies = movieService.findAllMovie();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Movies fetched successfully", movies));
     }
 
     @GetMapping("/findMovieById/{id}")
-    public Movie findMovieById(@PathVariable int id){
-        return movieService.findMovieById(id);
+    public ResponseEntity<ApiResponse<Movie>> findMovieById(@PathVariable int id) {
+        Movie movie = movieService.findMovieById(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Movie fetched successfully", movie));
     }
 @GetMapping("/searchByTitle")
-    public List<Movie> searchMoviesByTitle(String title){
-        return movieService.searchMoviesByTitle(title);
+    public ResponseEntity<ApiResponse<List<Movie>>> searchMoviesByTitle(String title) {
+        List<Movie> movies = movieService.searchMoviesByTitle(title);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Search results fetched successfully", movies));
     }
 
     @GetMapping("/filter")
-    public List<Movie> filterMovies(@RequestParam(required = false) String language,
-                                    @RequestParam(required = false) String genre,
-                                    @RequestParam(required = false) String format) {
-        return movieService.filterMovies(language, genre, format);
+    public ResponseEntity<ApiResponse<List<Movie>>> filterMovies(@RequestParam(required = false) String language,
+                                                                  @RequestParam(required = false) String genre,
+                                                                  @RequestParam(required = false) String format) {
+        List<Movie> movies = movieService.filterMovies(language, genre, format);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Filtered movies fetched successfully", movies));
     }
 
 
@@ -125,37 +130,37 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
 
 
     @GetMapping("/top-rated")
-    public ApiResponse<List<Movie>> topRatedMovies() {
+    public ResponseEntity<ApiResponse<List<Movie>>> topRatedMovies() {
         List<Movie> movies = movieService.getTopRatedMovies();
-        return new ApiResponse<List<Movie>>(true, "Top rated movies retrieved successfully", movies);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Top rated movies retrieved successfully", movies));
     }
 
     // 🔥 Trending
     @GetMapping("/trending")
-    public ApiResponse<List<Movie>> trendingMovies() {
+    public ResponseEntity<ApiResponse<List<Movie>>> trendingMovies() {
         List<Movie> movies = movieService.getTrendingMovies();
-        return new ApiResponse<List<Movie>>(true, "Trending movies retrieved successfully", movies);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Trending movies retrieved successfully", movies));
     }
 
     // 🎟 Popular
     @GetMapping("/popular")
-    public ApiResponse<List<Movie>> popularMovies() {
+    public ResponseEntity<ApiResponse<List<Movie>>> popularMovies() {
         List<Movie> movies = movieService.getPopularMovies();
-        return new ApiResponse<List<Movie>>(true, "Popular movies retrieved successfully", movies);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Popular movies retrieved successfully", movies));
     }
 
     // 👁 Increase views
     @PostMapping("/{id}/view")
-    public ResponseEntity<String> increaseView(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> increaseView(@PathVariable Long id) {
         movieService.increaseView(id);
-        return ResponseEntity.ok("View count increased");
+        return ResponseEntity.ok(new ApiResponse<>(true, "View count increased", null));
     }
 
     // 🎟 Increase bookings
     @PostMapping("/{id}/book")
-    public ResponseEntity<String> increaseBooking(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> increaseBooking(@PathVariable Long id) {
         movieService.increaseBooking(id);
-        return ResponseEntity.ok("Booking count increased");
+        return ResponseEntity.ok(new ApiResponse<>(true, "Booking count increased", null));
     }
 
     @PatchMapping("/{id}/feature")
