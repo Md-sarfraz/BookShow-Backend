@@ -75,6 +75,11 @@ public class SecurityConfig {
                         // Payment endpoints — permit all (security is handled via HMAC signature verification)
                         .requestMatchers("/payment/**").permitAll()
 
+                        // Admin-only write operations on movies, events, theaters, shows
+                        .requestMatchers(HttpMethod.POST, "/movie/**", "/events/**", "/theater/**", "/shows/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/movie/**", "/events/**", "/theater/**", "/shows/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/movie/**", "/events/**", "/theater/**", "/shows/**").hasRole("ADMIN")
+
                         // Role-based
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
