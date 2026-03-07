@@ -76,4 +76,26 @@ public class PaymentController {
                     .body(new ApiResponse<>(false, "Payment verification error: " + e.getMessage(), null));
         }
     }
+
+    /**
+     * STEP 3 (failure path) — Frontend calls this when Razorpay reports payment.failed.
+     * Marks the PENDING booking as FAILED so it doesn't linger as PENDING.
+     *
+     * POST /api/v1/payment/failed?razorpayOrderId=order_xxx
+     */
+    @PostMapping("/failed")
+    public ResponseEntity<ApiResponse<Void>> handlePaymentFailed(
+            @RequestParam String razorpayOrderId) {
+        try {
+            if (razorpayOrderId == null || razorpayOrderId.isBlank()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse<>(false, "razorpayOrderId is required", null));
+            }
+            paymentService.handlePaymentFailed(razorpayOrderId);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Booking marked as failed", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error updating booking status: " + e.getMessage(), null));
+        }
+    }
 }

@@ -160,4 +160,19 @@ public class PaymentService {
                 confirmedBooking.getPaymentStatus().name()
         );
     }
+
+    /**
+     * Mark a PENDING booking as FAILED when Razorpay reports payment failure.
+     * Only transitions from PENDING to avoid overwriting a later CONFIRMED state
+     * in case of out-of-order callbacks.
+     */
+    @Transactional
+    public void handlePaymentFailed(String razorpayOrderId) {
+        bookingRepository.findByRazorpayOrderId(razorpayOrderId).ifPresent(booking -> {
+            if (booking.getPaymentStatus() == Booking.PaymentStatus.PENDING) {
+                booking.setPaymentStatus(Booking.PaymentStatus.FAILED);
+                bookingRepository.save(booking);
+            }
+        });
+    }
 }

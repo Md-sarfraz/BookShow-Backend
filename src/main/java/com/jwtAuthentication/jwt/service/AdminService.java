@@ -92,24 +92,56 @@ public class AdminService {
         return bookingRepository.findAll();
     }
 
+    /**
+     * Admin override for booking status with strict transition rules:
+     *   PENDING    → CONFIRMED or FAILED   (manual verification / payment reconciliation)
+     *   CONFIRMED  → CANCELLED             (refund / support cancellation)
+     *   FAILED     → (terminal — no change allowed)
+     *   CANCELLED  → (terminal — no change allowed)
+     */
     public Booking updateBookingStatus(Long bookingId, String status) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
-        
+
         Booking.PaymentStatus newStatus;
         try {
             newStatus = Booking.PaymentStatus.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid status: " + status);
         }
-        
+
+        Booking.PaymentStatus current = booking.getPaymentStatus();
+
+        // Guard: same status is a no-op but not an error
+        if (current == newStatus) {
+            return booking;
+        }
+
+        boolean allowed = switch (current) {
+            case PENDING   -> newStatus == Booking.PaymentStatus.CONFIRMED
+                           || newStatus == Booking.PaymentStatus.FAILED;
+            case CONFIRMED -> newStatus == Booking.PaymentStatus.CANCELLED;
+            case FAILED, CANCELLED -> false;
+        };
+
+        if (!allowed) {
+            String allowedMsg = switch (current) {
+                case PENDING   -> "CONFIRMED or FAILED";
+                case CONFIRMED -> "CANCELLED";
+                case FAILED    -> "none — FAILED is a terminal state";
+                case CANCELLED -> "none — CANCELLED is a terminal state";
+            };
+            throw new RuntimeException(
+                "Invalid status transition: " + current + " → " + newStatus
+                + ". Allowed transitions from " + current + ": " + allowedMsg);
+        }
+
         booking.setPaymentStatus(newStatus);
-        
-        // Set confirmedAt if status is CONFIRMED
+
         if (newStatus == Booking.PaymentStatus.CONFIRMED && booking.getConfirmedAt() == null) {
             booking.setConfirmedAt(LocalDateTime.now());
         }
-        
+
         return bookingRepository.save(booking);
     }
 
