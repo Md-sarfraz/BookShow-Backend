@@ -76,4 +76,8 @@ public class TheaterService {
         return theaterRepository.findByCity(city);
     }
 
+    public List<String> getDistinctCities() {
+        return theaterRepository.findAllDistinctCities();
+    }
+
 }

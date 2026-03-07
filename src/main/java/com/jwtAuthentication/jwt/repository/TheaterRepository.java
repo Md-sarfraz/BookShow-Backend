@@ -24,4 +24,8 @@ public interface TheaterRepository extends JpaRepository<Theater,Integer> {
 
     List<Theater> findByCity(String city);
 
+    // Get all distinct city names that have at least one theater
+    @Query("SELECT DISTINCT t.city FROM Theater t ORDER BY t.city")
+    List<String> findAllDistinctCities();
+
 }

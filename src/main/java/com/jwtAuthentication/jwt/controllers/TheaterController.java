@@ -74,4 +74,10 @@ public class TheaterController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Theaters fetched successfully", theaters));
     }
 
+    @GetMapping("/cities")
+    public ResponseEntity<ApiResponse<List<String>>> getDistinctCities() {
+        List<String> cities = theaterService.getDistinctCities();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Cities fetched successfully", cities));
+    }
+
 }

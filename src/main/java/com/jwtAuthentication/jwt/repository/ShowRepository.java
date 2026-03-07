@@ -27,11 +27,11 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
     List<Show> findByMovieMovieIdAndTheaterIdAndShowDate(int movieId, int theaterId, LocalDate showDate);
     
     // Find shows by movie and city
-    @Query("SELECT s FROM Show s WHERE s.movie.movieId = :movieId AND s.theater.city = :city")
+    @Query("SELECT s FROM Show s WHERE s.movie.movieId = :movieId AND LOWER(s.theater.city) = LOWER(:city)")
     List<Show> findByMovieIdAndCity(@Param("movieId") int movieId, @Param("city") String city);
     
     // Find shows by movie, city and date
-    @Query("SELECT s FROM Show s WHERE s.movie.movieId = :movieId AND s.theater.city = :city AND s.showDate = :date")
+    @Query("SELECT s FROM Show s WHERE s.movie.movieId = :movieId AND LOWER(s.theater.city) = LOWER(:city) AND s.showDate = :date")
     List<Show> findByMovieIdAndCityAndDate(@Param("movieId") int movieId, @Param("city") String city, @Param("date") LocalDate date);
     
     // Find upcoming shows for a movie
@@ -50,7 +50,7 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
     List<LocalDate> findDistinctDatesByMovie(@Param("movieId") int movieId, @Param("fromDate") LocalDate fromDate);
     
     // Get distinct dates for a movie in a city
-    @Query("SELECT DISTINCT s.showDate FROM Show s WHERE s.movie.movieId = :movieId AND s.theater.city = :city AND s.showDate >= :fromDate ORDER BY s.showDate")
+    @Query("SELECT DISTINCT s.showDate FROM Show s WHERE s.movie.movieId = :movieId AND LOWER(s.theater.city) = LOWER(:city) AND s.showDate >= :fromDate ORDER BY s.showDate")
     List<LocalDate> findDistinctDatesByMovieAndCity(@Param("movieId") int movieId, @Param("city") String city, @Param("fromDate") LocalDate fromDate);
 
     // Count today's shows
