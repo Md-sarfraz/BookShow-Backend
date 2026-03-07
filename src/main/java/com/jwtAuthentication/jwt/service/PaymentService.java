@@ -38,6 +38,9 @@ public class PaymentService {
     @Autowired
     private ShowRepository showRepository;
 
+    @Autowired
+    private SeatLockService seatLockService;
+
     /**
      * STEP 1: Create a Razorpay order server-side.
      * Amount is always calculated server-side — never trusted from frontend.
@@ -76,6 +79,15 @@ public class PaymentService {
 
         Order razorpayOrder = razorpayClient.orders.create(orderRequest);
         String razorpayOrderId = razorpayOrder.get("id");
+
+        // Lock seats for the payment window (5 minutes) before saving booking.
+        // This prevents another user from selecting the same seats concurrently.
+        seatLockService.lockSeats(
+                request.getShowId(),
+                request.getSeatLabels(),
+                request.getUserId(),
+                razorpayOrderId
+        );
 
         // Save PENDING booking in our DB (we can reconcile later)
         Booking booking = new Booking();
@@ -139,6 +151,9 @@ public class PaymentService {
 
         Booking confirmedBooking = bookingRepository.save(booking);
 
+        // Release seat locks — payment is confirmed, the booking record is the true source of truth.
+        seatLockService.releaseLocksForOrder(request.getRazorpayOrderId());
+
         // Build response
         Show show = confirmedBooking.getShow();
 
@@ -174,5 +189,7 @@ public class PaymentService {
                 bookingRepository.save(booking);
             }
         });
+        // Release seat locks so others can now book these seats
+        seatLockService.releaseLocksForOrder(razorpayOrderId);
     }
 }
