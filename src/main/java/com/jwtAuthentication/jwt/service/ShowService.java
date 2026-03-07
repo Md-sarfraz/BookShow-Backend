@@ -87,7 +87,7 @@ public class ShowService {
             shows.forEach(show -> {
                 System.out.println("   📍 Show " + show.getShowId() + ": " +
                     show.getTheater().getName() + " in " + 
-                    show.getTheater().getCity() + " on " + 
+                    (show.getTheater().getCity() != null ? show.getTheater().getCity().getName() : "N/A") + " on " + 
                     show.getShowDate());
             });
         }
@@ -99,31 +99,28 @@ public class ShowService {
         return showRepository.findByMovieMovieIdAndShowDate(movieId, date);
     }
     
-    // Get shows by movie and city
-    public List<Show> getShowsByMovieAndCity(int movieId, String city) {
-        return showRepository.findByMovieIdAndCity(movieId, city);
+    // Get shows by movie and cityId
+    public List<Show> getShowsByMovieAndCity(int movieId, Integer cityId) {
+        return showRepository.findByMovieIdAndCityId(movieId, cityId);
     }
     
-    // Get shows by movie, city and date
-    public List<Show> getShowsByMovieAndCityAndDate(int movieId, String city, LocalDate date) {
+    // Get shows by movie, cityId and date
+    public List<Show> getShowsByMovieAndCityAndDate(int movieId, Integer cityId, LocalDate date) {
         System.out.println("========================================");
         System.out.println("🔍 ShowService.getShowsByMovieAndCityAndDate");
         System.out.println("   movieId: " + movieId);
-        System.out.println("   city: '" + city + "'");
+        System.out.println("   cityId: " + cityId);
         System.out.println("   date: " + date);
         System.out.println("========================================");
         
-        List<Show> shows = showRepository.findByMovieIdAndCityAndDate(movieId, city, date);
+        List<Show> shows = showRepository.findByMovieIdAndCityIdAndDate(movieId, cityId, date);
         
         System.out.println("✅ Query returned " + shows.size() + " shows");
-        if (shows.isEmpty()) {
-            System.out.println("⚠️ No shows found!");
-            System.out.println("⚠️ Make sure theater.city = '" + city + "' in database");
-        } else {
+        if (!shows.isEmpty()) {
             shows.forEach(show -> {
                 System.out.println("   📍 Show: " + show.getShowId() + 
                     " | Theater: " + show.getTheater().getName() + 
-                    " | City: " + show.getTheater().getCity());
+                    " | City: " + (show.getTheater().getCity() != null ? show.getTheater().getCity().getName() : "N/A"));
             });
         }
         System.out.println("========================================");
@@ -151,8 +148,8 @@ public class ShowService {
     }
     
     // Get available dates for a movie in a city
-    public List<LocalDate> getAvailableDatesForMovieInCity(int movieId, String city) {
-        return showRepository.findDistinctDatesByMovieAndCity(movieId, city, LocalDate.now());
+    public List<LocalDate> getAvailableDatesForMovieInCity(int movieId, Integer cityId) {
+        return showRepository.findDistinctDatesByMovieAndCityId(movieId, cityId, LocalDate.now());
     }
     
     // Update show

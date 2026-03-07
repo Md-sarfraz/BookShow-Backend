@@ -36,10 +36,10 @@ public class TheaterService {
         // Log activity
         activityService.logActivity(
             Activity.ActivityType.THEATER_ADDED,
-            "New theater '" + savedTheater.getName() + "' registered in " + savedTheater.getCity(),
+            "New theater '" + savedTheater.getName() + "' registered in " + (savedTheater.getCity() != null ? savedTheater.getCity().getName() : "N/A"),
             savedTheater.getName(),
             Long.valueOf(savedTheater.getId()),
-            "City: " + savedTheater.getCity() + " | Location: " + savedTheater.getLocation()
+            "City: " + (savedTheater.getCity() != null ? savedTheater.getCity().getName() : "N/A") + " | Location: " + savedTheater.getLocation()
         );
         
         return savedTheater;
@@ -68,16 +68,12 @@ public class TheaterService {
         return theaterRepository.findTheatersByMovieId(movieId);
     }
 
-    public List<Theater> findTheatersByMovieIdAndCity(Integer movieId, String city) {
-        return theaterRepository.findTheatersByMovieIdAndCity(movieId, city);
+    public List<Theater> findTheatersByMovieIdAndCityId(Integer movieId, Integer cityId) {
+        return theaterRepository.findTheatersByMovieIdAndCityId(movieId, cityId);
     }
 
-    public List<Theater> findTheatersByCity(String city) {
-        return theaterRepository.findByCity(city);
-    }
-
-    public List<String> getDistinctCities() {
-        return theaterRepository.findAllDistinctCities();
+    public List<Theater> findTheatersByCityId(Integer cityId) {
+        return theaterRepository.findByCityId(cityId);
     }
 
 }

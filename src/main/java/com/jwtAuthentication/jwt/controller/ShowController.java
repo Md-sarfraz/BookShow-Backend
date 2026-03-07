@@ -68,24 +68,24 @@ public class ShowController {
                 .body(new ApiResponse<>(false, "Show not found", null));
     }
     
-    // Get shows by movie (with optional city and date filters)
+    // Get shows by movie (with optional cityId and date filters)
     @GetMapping("/by-movie/{movieId}")
     public ResponseEntity<ApiResponse<List<Show>>> getShowsByMovie(
             @PathVariable int movieId,
-            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Integer cityId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         
         System.out.println("========================================");
         System.out.println("📋 GET /api/v1/shows/by-movie/" + movieId);
-        System.out.println("   city: " + city + ", date: " + date);
+        System.out.println("   cityId: " + cityId + ", date: " + date);
         System.out.println("========================================");
         
         List<Show> shows;
         
-        if (city != null && date != null) {
-            shows = showService.getShowsByMovieAndCityAndDate(movieId, city, date);
-        } else if (city != null) {
-            shows = showService.getShowsByMovieAndCity(movieId, city);
+        if (cityId != null && date != null) {
+            shows = showService.getShowsByMovieAndCityAndDate(movieId, cityId, date);
+        } else if (cityId != null) {
+            shows = showService.getShowsByMovieAndCity(movieId, cityId);
         } else if (date != null) {
             shows = showService.getShowsByMovieAndDate(movieId, date);
         } else {
@@ -129,11 +129,11 @@ public class ShowController {
     @GetMapping("/dates/{movieId}")
     public ResponseEntity<ApiResponse<List<LocalDate>>> getAvailableDates(
             @PathVariable int movieId,
-            @RequestParam(required = false) String city) {
+            @RequestParam(required = false) Integer cityId) {
         
         List<LocalDate> dates;
-        if (city != null) {
-            dates = showService.getAvailableDatesForMovieInCity(movieId, city);
+        if (cityId != null) {
+            dates = showService.getAvailableDatesForMovieInCity(movieId, cityId);
         } else {
             dates = showService.getAvailableDatesForMovie(movieId);
         }

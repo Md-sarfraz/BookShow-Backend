@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -32,8 +33,12 @@ public class Theater {
 
     @Column
     private String location;
-    @Column
-    private String city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private City city;
+
     @Column
     private String state;
     @Column

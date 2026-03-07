@@ -57,27 +57,21 @@ public class TheaterController {
     @GetMapping("/by-movie/{movieId}")
     public ResponseEntity<ApiResponse<List<Theater>>> getTheatersByMovieId(
             @PathVariable int movieId,
-            @RequestParam(required = false) String city) {
+            @RequestParam(required = false) Integer cityId) {
 
         List<Theater> theaters;
-        if (city != null && !city.isEmpty()) {
-            theaters = theaterService.findTheatersByMovieIdAndCity(movieId, city);
+        if (cityId != null) {
+            theaters = theaterService.findTheatersByMovieIdAndCityId(movieId, cityId);
         } else {
             theaters = theaterService.findTheatersByMovieId(movieId);
         }
         return ResponseEntity.ok(new ApiResponse<>(true, "Theaters fetched successfully", theaters));
     }
 
-    @GetMapping("/by-city/{city}")
-    public ResponseEntity<ApiResponse<List<Theater>>> getTheatersByCity(@PathVariable String city) {
-        List<Theater> theaters = theaterService.findTheatersByCity(city);
+    @GetMapping("/by-city/{cityId}")
+    public ResponseEntity<ApiResponse<List<Theater>>> getTheatersByCityId(@PathVariable Integer cityId) {
+        List<Theater> theaters = theaterService.findTheatersByCityId(cityId);
         return ResponseEntity.ok(new ApiResponse<>(true, "Theaters fetched successfully", theaters));
-    }
-
-    @GetMapping("/cities")
-    public ResponseEntity<ApiResponse<List<String>>> getDistinctCities() {
-        List<String> cities = theaterService.getDistinctCities();
-        return ResponseEntity.ok(new ApiResponse<>(true, "Cities fetched successfully", cities));
     }
 
 }

@@ -19,13 +19,10 @@ public interface TheaterRepository extends JpaRepository<Theater,Integer> {
     List<Theater> findTheatersByMovieId(@Param("movieId") Integer movieId);
 
     // Query theaters showing a specific movie in a specific city (through Show entity)
-    @Query("SELECT DISTINCT t FROM Theater t JOIN Show s ON s.theater.id = t.id WHERE s.movie.movieId = :movieId AND t.city = :city")
-    List<Theater> findTheatersByMovieIdAndCity(@Param("movieId") Integer movieId, @Param("city") String city);
+    @Query("SELECT DISTINCT t FROM Theater t JOIN Show s ON s.theater.id = t.id WHERE s.movie.movieId = :movieId AND t.city.id = :cityId")
+    List<Theater> findTheatersByMovieIdAndCityId(@Param("movieId") Integer movieId, @Param("cityId") Integer cityId);
 
-    List<Theater> findByCity(String city);
-
-    // Get all distinct city names that have at least one theater
-    @Query("SELECT DISTINCT t.city FROM Theater t ORDER BY t.city")
-    List<String> findAllDistinctCities();
+    @Query("SELECT t FROM Theater t WHERE t.city.id = :cityId")
+    List<Theater> findByCityId(@Param("cityId") Integer cityId);
 
 }

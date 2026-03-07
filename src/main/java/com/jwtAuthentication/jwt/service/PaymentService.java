@@ -154,7 +154,7 @@ public class PaymentService {
                 confirmedBooking.getSeatLabels(),
                 show.getMovie() != null ? show.getMovie().getTitle() : "",
                 show.getTheater() != null ? show.getTheater().getName() : "",
-                show.getTheater() != null ? show.getTheater().getCity() : "",
+                show.getTheater() != null && show.getTheater().getCity() != null ? show.getTheater().getCity().getName() : "",
                 show.getShowDate() != null ? show.getShowDate().toString() : "",
                 show.getShowTime() != null ? show.getShowTime().toString() : "",
                 confirmedBooking.getPaymentStatus().name()
