@@ -36,6 +36,43 @@ public class MovieService {
     }
 
 
+    public Movie saveMovieWithUrls(MovieRequestDto dto) {
+        // Duplicate check: same title + language
+        if (movieRepository.existsByTitleIgnoreCaseAndLanguageIgnoreCase(dto.getTitle(), dto.getLanguage())) {
+            throw new DuplicateResourceException(
+                    "Movie '" + dto.getTitle() + "' in language '" + dto.getLanguage() + "' already exists.");
+        }
+
+        Movie movie = new Movie();
+        movie.setTitle(dto.getTitle());
+        movie.setDescription(dto.getDescription());
+        movie.setGenre(dto.getGenre());
+        movie.setDuration(dto.getDuration());
+        movie.setLanguage(dto.getLanguage());
+        movie.setPrice(dto.getPrice());
+        movie.setReleaseDate(dto.getReleaseDate());
+        movie.setPostUrl(dto.getPostUrl());
+        movie.setBackgroundImageUrl(dto.getBackgroundImageUrl());
+        movie.setRating(dto.getRating());
+        movie.setDirector(dto.getDirector());
+        movie.setTrailer(dto.getTrailer());
+        movie.setFeatured(dto.getFeatured() != null ? dto.getFeatured() : false);
+        movie.setCastMember(dto.getCastMember());
+        movie.setCrewMember(dto.getCrewMember());
+
+        Movie savedMovie = movieRepository.save(movie);
+
+        activityService.logActivity(
+            Activity.ActivityType.MOVIE_ADDED,
+            "Added a new movie '" + savedMovie.getTitle() + "' to the catalog",
+            savedMovie.getTitle(),
+            Long.valueOf(savedMovie.getMovieId()),
+            savedMovie.getGenre() + " | " + savedMovie.getLanguage()
+        );
+
+        return savedMovie;
+    }
+
     public Movie saveMovie(Movie movie, MultipartFile imageFile, MultipartFile backgroundImageFile) throws IOException {
         // Duplicate check: same title + language
         if (movieRepository.existsByTitleIgnoreCaseAndLanguageIgnoreCase(movie.getTitle(), movie.getLanguage())) {

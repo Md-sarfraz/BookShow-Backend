@@ -169,5 +169,24 @@ public ResponseEntity<ApiResponse<Void>> addMovie(
         ApiResponse<Movie> response = new ApiResponse<>(true, "Movie marked as featured", movie);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/createBulk")
+    public ResponseEntity<ApiResponse<List<String>>> createBulkMovies(@RequestBody List<MovieRequestDto> movies) {
+        List<String> results = new java.util.ArrayList<>();
+        int successCount = 0;
+        for (MovieRequestDto dto : movies) {
+            try {
+                movieService.saveMovieWithUrls(dto);
+                results.add("SUCCESS: " + dto.getTitle());
+                successCount++;
+            } catch (Exception e) {
+                results.add("FAILED: " + dto.getTitle() + " - " + e.getMessage());
+            }
+        }
+        boolean allSuccess = successCount == movies.size();
+        String message = successCount + "/" + movies.size() + " movies created successfully";
+        return ResponseEntity.status(allSuccess ? HttpStatus.CREATED : HttpStatus.MULTI_STATUS)
+                .body(new ApiResponse<>(allSuccess, message, results));
+    }
 //
 }
