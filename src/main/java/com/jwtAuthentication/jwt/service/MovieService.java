@@ -134,8 +134,17 @@ public class MovieService {
             updatedMovie.setPrice(movieRequestDto.getPrice());
             updatedMovie.setReleaseDate(movieRequestDto.getReleaseDate());
             updatedMovie.setPostUrl(movieRequestDto.getPostUrl());
+            updatedMovie.setBackgroundImageUrl(movieRequestDto.getBackgroundImageUrl());
             updatedMovie.setRating(movieRequestDto.getRating());
-            updatedMovie.setFeatured(movieRequestDto.getFeatured());  // <-- Added this line
+            updatedMovie.setDirector(movieRequestDto.getDirector());
+            updatedMovie.setTrailer(movieRequestDto.getTrailer());
+            updatedMovie.setFeatured(movieRequestDto.getFeatured());
+            if (movieRequestDto.getCastMember() != null) {
+                updatedMovie.setCastMember(movieRequestDto.getCastMember());
+            }
+            if (movieRequestDto.getCrewMember() != null) {
+                updatedMovie.setCrewMember(movieRequestDto.getCrewMember());
+            }
 
             movieRepository.save(updatedMovie);
 
@@ -150,7 +159,7 @@ public class MovieService {
             movieResponseDto.setReleaseDate(String.valueOf(updatedMovie.getReleaseDate()));
             movieResponseDto.setPostUrl(updatedMovie.getPostUrl());
             movieResponseDto.setRating(updatedMovie.getRating());
-            movieResponseDto.setFeatured(updatedMovie.getFeatured());  // <-- Added this line
+            movieResponseDto.setFeatured(updatedMovie.getFeatured());
 
             return movieResponseDto;
         } else {
