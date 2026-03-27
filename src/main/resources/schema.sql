@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS notifications (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    message VARCHAR(500) NOT NULL,
+    type VARCHAR(30) NOT NULL,
+    created_at DATETIME NOT NULL,
+    is_read BIT(1) NOT NULL DEFAULT b'0',
+    PRIMARY KEY (id)
+);
