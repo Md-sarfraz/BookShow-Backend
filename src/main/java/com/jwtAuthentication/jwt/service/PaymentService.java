@@ -2,6 +2,7 @@ package com.jwtAuthentication.jwt.service;
 
 import com.jwtAuthentication.jwt.DTO.*;
 import com.jwtAuthentication.jwt.model.Booking;
+import com.jwtAuthentication.jwt.model.NotificationType;
 import com.jwtAuthentication.jwt.model.Show;
 import com.jwtAuthentication.jwt.repository.BookingRepository;
 import com.jwtAuthentication.jwt.repository.ShowRepository;
@@ -40,6 +41,9 @@ public class PaymentService {
 
     @Autowired
     private SeatLockService seatLockService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * STEP 1: Create a Razorpay order server-side.
@@ -151,11 +155,21 @@ public class PaymentService {
 
         Booking confirmedBooking = bookingRepository.save(booking);
 
-        // Release seat locks — payment is confirmed, the booking record is the true source of truth.
-        seatLockService.releaseLocksForOrder(request.getRazorpayOrderId());
-
         // Build response
         Show show = confirmedBooking.getShow();
+
+        String movieName = show.getMovie() != null ? show.getMovie().getTitle() : "Unknown movie";
+        notificationService.createAndBroadcast(
+            "New booking for " + movieName,
+            NotificationType.BOOKING
+        );
+        notificationService.createAndBroadcast(
+            "Payment successful for " + movieName,
+            NotificationType.PAYMENT
+        );
+
+        // Release seat locks — payment is confirmed, the booking record is the true source of truth.
+        seatLockService.releaseLocksForOrder(request.getRazorpayOrderId());
 
         return new BookingConfirmationResponse(
                 confirmedBooking.getBookingId(),
@@ -187,6 +201,14 @@ public class PaymentService {
             if (booking.getPaymentStatus() == Booking.PaymentStatus.PENDING) {
                 booking.setPaymentStatus(Booking.PaymentStatus.FAILED);
                 bookingRepository.save(booking);
+
+                String movieName = booking.getShow() != null && booking.getShow().getMovie() != null
+                        ? booking.getShow().getMovie().getTitle()
+                        : "Unknown movie";
+                notificationService.createAndBroadcast(
+                        "Payment failed for " + movieName,
+                        NotificationType.PAYMENT
+                );
             }
         });
         // Release seat locks so others can now book these seats

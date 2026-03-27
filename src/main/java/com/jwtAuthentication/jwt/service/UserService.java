@@ -5,6 +5,7 @@ import com.jwtAuthentication.jwt.DTO.requestDto.SignUpRequestDto;
 import com.jwtAuthentication.jwt.DTO.responseDto.LoginResponse;
 import com.jwtAuthentication.jwt.execption.DuplicateResourceException;
 import com.jwtAuthentication.jwt.model.Activity;
+import com.jwtAuthentication.jwt.model.NotificationType;
 import com.jwtAuthentication.jwt.model.Role;
 import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.UserRepository;
@@ -32,6 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final ActivityService activityService;
+    private final NotificationService notificationService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -39,12 +41,14 @@ public class UserService {
                        PasswordEncoder passwordEncoder,
                        UserRepository userRepository,
                        AuthenticationManager authenticationManager,
-                       ActivityService activityService) {
+                       ActivityService activityService,
+                       NotificationService notificationService) {
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.activityService = activityService;
+        this.notificationService = notificationService;
     }
 
     /* ========================= LOGIN ========================= */
@@ -125,6 +129,11 @@ public class UserService {
             savedUser.getUsername(),
             Long.valueOf(savedUser.getId()),
             savedUser.getEmail()
+        );
+
+        notificationService.createAndBroadcast(
+                "New user registered: " + savedUser.getUsername(),
+                NotificationType.USER
         );
     }
 

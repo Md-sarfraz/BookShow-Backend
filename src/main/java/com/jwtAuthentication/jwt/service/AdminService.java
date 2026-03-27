@@ -15,6 +15,7 @@ import com.jwtAuthentication.jwt.repository.MovieRepository;
 import com.jwtAuthentication.jwt.repository.ShowRepository;
 import com.jwtAuthentication.jwt.repository.TheaterRepository;
 import com.jwtAuthentication.jwt.repository.UserRepository;
+import com.jwtAuthentication.jwt.model.NotificationType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class AdminService {
     private final BookingRepository bookingRepository;
     private final ShowRepository showRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     public AdminService(
             MovieRepository movieRepository,
@@ -46,7 +48,8 @@ public class AdminService {
             EventRepository eventRepository,
             BookingRepository bookingRepository,
             ShowRepository showRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            NotificationService notificationService
     ) {
         this.movieRepository = movieRepository;
         this.theaterRepository = theaterRepository;
@@ -55,6 +58,7 @@ public class AdminService {
         this.bookingRepository = bookingRepository;
         this.showRepository = showRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
     }
 
     public AdminDashboardResponseDTO getDashboardCounts() {
@@ -140,6 +144,16 @@ public class AdminService {
 
         if (newStatus == Booking.PaymentStatus.CONFIRMED && booking.getConfirmedAt() == null) {
             booking.setConfirmedAt(LocalDateTime.now());
+        }
+
+        if (newStatus == Booking.PaymentStatus.CANCELLED) {
+            String movieName = booking.getShow() != null && booking.getShow().getMovie() != null
+                    ? booking.getShow().getMovie().getTitle()
+                    : "Unknown movie";
+            notificationService.createAndBroadcast(
+                    "Booking cancelled for " + movieName,
+                    NotificationType.BOOKING
+            );
         }
 
         return bookingRepository.save(booking);
