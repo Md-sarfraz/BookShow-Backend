@@ -62,8 +62,7 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/health",
                                 "/ws/**",
-                                "/api/v1/ws/**",
-                                "/**/ws/**"
+                            "/api/v1/ws/**"
                         ).permitAll()
 
                         // Public GET APIs only
