@@ -44,4 +44,15 @@ public class Event {
 
     @Column(columnDefinition = "TEXT") // In case description is long
     private String description;
+
+    @Column(name = "total_tickets", nullable = false)
+    private Integer totalTickets = 200;
+
+    @PrePersist
+    @PreUpdate
+    private void ensureTotalTickets() {
+        if (totalTickets == null || totalTickets <= 0) {
+            totalTickets = 200;
+        }
+    }
 }

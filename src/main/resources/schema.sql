@@ -6,3 +6,4 @@ CREATE TABLE IF NOT EXISTS notifications (
     is_read BIT(1) NOT NULL DEFAULT b'0',
     PRIMARY KEY (id)
 );
+

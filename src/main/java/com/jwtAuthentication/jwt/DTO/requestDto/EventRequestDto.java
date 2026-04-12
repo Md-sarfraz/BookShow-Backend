@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EventRequestDto {
 
+    private Integer id;
     private String title;
     private String category;
     private String date;

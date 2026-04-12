@@ -11,6 +11,7 @@ public class EventMapper {
 
     public static EventRequestDto toDTO(Event event) {
         EventRequestDto dto = new EventRequestDto();
+        dto.setId(event.getId());
         dto.setTitle(event.getTitle());
         dto.setCategory(event.getCategory());
         dto.setDate(event.getDate());
@@ -25,6 +26,9 @@ public class EventMapper {
 
     public static Event toEntity(EventRequestDto dto) {
         Event event = new Event();
+        if (dto.getId() != null) {
+            event.setId(dto.getId());
+        }
         event.setTitle(dto.getTitle());
         event.setCategory(dto.getCategory());
         event.setDate(dto.getDate());

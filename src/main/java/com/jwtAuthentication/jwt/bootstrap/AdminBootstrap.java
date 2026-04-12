@@ -37,7 +37,6 @@ public class AdminBootstrap implements CommandLineRunner {
             admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setRole(Role.ADMIN);
-
             userRepository.save(admin);
 
             System.out.println("✅ FIRST ADMIN CREATED");

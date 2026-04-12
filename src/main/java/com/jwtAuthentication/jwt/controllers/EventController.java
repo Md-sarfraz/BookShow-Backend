@@ -7,6 +7,7 @@ import com.jwtAuthentication.jwt.mapper.EventMapper;
 import com.jwtAuthentication.jwt.model.Event;
 import com.jwtAuthentication.jwt.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,31 +31,28 @@ public class EventController {
             @RequestPart("event") String eventJson,
             @RequestPart("image") MultipartFile imageFile,
             @RequestPart("backgroundImage") MultipartFile backgroundImageFile) {
-
+        EventRequestDto eventDto;
         try {
-            EventRequestDto eventDto = objectMapper.readValue(eventJson, EventRequestDto.class);
-            Event eventEntity = EventMapper.toEntity(eventDto);
-            Event savedEvent = eventService.saveEvent(eventEntity, imageFile, backgroundImageFile);
-
-            ApiResponse<Event> response = new ApiResponse<>(
-                    true,
-                    "Event created successfully",
-                    savedEvent
-            );
-
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            ApiResponse<Event> response = new ApiResponse<>(
-                    false,
-                    "Something went wrong: " + e.getMessage(),
-                    null
-            );
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            eventDto = objectMapper.readValue(eventJson, EventRequestDto.class);
+        } catch (Exception ex) {
+            throw new RuntimeException("Invalid event payload", ex);
         }
+
+        Event eventEntity = EventMapper.toEntity(eventDto);
+        Event savedEvent;
+        try {
+            savedEvent = eventService.saveEvent(eventEntity, imageFile, backgroundImageFile);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+
+        ApiResponse<Event> response = new ApiResponse<>(
+                true,
+                "Event created successfully",
+                savedEvent
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 
@@ -74,9 +72,33 @@ public class EventController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Fetched event successfully", event));
     }
     // Update Event
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<String>> updateEvent(@PathVariable int id, @RequestBody EventRequestDto eventRequestDto) {
-        String updatedEvent = eventService.updateEvent(id, eventRequestDto);
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<EventRequestDto>> updateEventWithMedia(
+            @PathVariable int id,
+            @RequestPart("event") String eventJson,
+            @RequestPart(value = "image", required = false) MultipartFile imageFile,
+            @RequestPart(value = "backgroundImage", required = false) MultipartFile backgroundImageFile) {
+
+        EventRequestDto eventRequestDto;
+        try {
+            eventRequestDto = objectMapper.readValue(eventJson, EventRequestDto.class);
+        } catch (Exception ex) {
+            throw new RuntimeException("Invalid event payload", ex);
+        }
+
+        EventRequestDto updatedEvent;
+        try {
+            updatedEvent = eventService.updateEvent(id, eventRequestDto, imageFile, backgroundImageFile);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Event updated successfully", updatedEvent));
+    }
+
+    @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<EventRequestDto>> updateEvent(@PathVariable int id, @RequestBody EventRequestDto eventRequestDto) {
+        EventRequestDto updatedEvent = eventService.updateEvent(id, eventRequestDto);
         return ResponseEntity.ok(new ApiResponse<>(true, "Event updated successfully", updatedEvent));
     }
 

@@ -9,4 +9,11 @@ public interface EventRepository extends JpaRepository<Event,Integer> {
 
     // Duplicate check: same title + date + location
     boolean existsByTitleIgnoreCaseAndDateAndLocationIgnoreCase(String title, String date, String location);
+
+    boolean existsByTitleIgnoreCaseAndDateAndLocationIgnoreCaseAndIdNot(
+            String title,
+            String date,
+            String location,
+            int id
+    );
 }

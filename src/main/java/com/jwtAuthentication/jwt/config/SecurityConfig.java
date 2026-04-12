@@ -75,8 +75,16 @@ public class SecurityConfig {
                                 "/cities/**"
                         ).permitAll()
 
-                        // Payment endpoints — permit all (security is handled via HMAC signature verification)
+                        // Movie payment endpoints — permit all (security is handled via HMAC signature verification)
                         .requestMatchers("/payment/**").permitAll()
+
+                        // Event booking/payment flow for logged-in users
+                        .requestMatchers(HttpMethod.POST,
+                            "/events/check-availability",
+                            "/events/lock-tickets",
+                            "/events/release-lock",
+                            "/event-payment/**"
+                        ).authenticated()
 
                         // Admin-only write operations on movies, events, theaters, shows, cities
                         .requestMatchers(HttpMethod.POST, "/movie/**", "/events/**", "/theater/**", "/shows/**", "/cities/**").hasRole("ADMIN")
