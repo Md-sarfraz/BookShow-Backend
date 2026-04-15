@@ -1,0 +1,262 @@
+package com.jwtAuthentication.jwt.controller;
+
+import com.jwtAuthentication.jwt.DTO.SeatStatusDTO;
+import com.jwtAuthentication.jwt.DTO.responseDto.CancelBookingResponseDto;
+import com.jwtAuthentication.jwt.model.Booking;
+import com.jwtAuthentication.jwt.model.Refund;
+import com.jwtAuthentication.jwt.repository.BookingRepository;
+import com.jwtAuthentication.jwt.repository.RefundRepository;
+import com.jwtAuthentication.jwt.service.PaymentService;
+import com.jwtAuthentication.jwt.service.SeatLockService;
+import com.jwtAuthentication.jwt.util.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/bookings")
+@CrossOrigin(origins = "*")
+public class BookingController {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private RefundRepository refundRepository;
+
+    @Autowired
+    private SeatLockService seatLockService;
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse<List<Booking>>> getUserBookings(@PathVariable Long userId) {
+        List<Booking> bookings = paymentService.getUserBookings(userId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "User bookings fetched successfully", bookings));
+    }
+
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<ApiResponse<Booking>> cancelBooking(
+            @PathVariable Long bookingId,
+            @RequestParam(name = "userId") Long userId
+    ) {
+        try {
+            Booking cancelled = paymentService.cancelUserBooking(bookingId, userId);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Booking cancelled successfully", cancelled));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(false, ex.getMessage(), null));
+        }
+    }
+
+    @PostMapping("/cancel-booking")
+    public ResponseEntity<CancelBookingResponseDto> cancelBookingApi(
+            @RequestParam(name = "bookingId") Long bookingId,
+            @RequestParam(name = "userId") Long userId
+    ) {
+        try {
+            paymentService.cancelUserBooking(bookingId, userId);
+            Optional<Refund> refund = refundRepository.findTopByBookingBookingIdOrderByCreatedAtDesc(bookingId);
+            double refundAmount = refund.map(Refund::getRefundAmount).orElse(0.0);
+            String refundStatus = refund.map(r -> r.getRefundStatus().name()).orElse("N/A");
+            return ResponseEntity.ok(new CancelBookingResponseDto(
+                    true,
+                    "Booking cancelled successfully",
+                    refundAmount,
+                    refundStatus
+            ));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CancelBookingResponseDto(false, ex.getMessage(), 0.0, "FAILED"));
+        }
+    }
+
+    @GetMapping("/show/{showId}/booked-seats")
+    public ResponseEntity<List<String>> getBookedSeats(@PathVariable Long showId) {
+        List<String> bookedSeats = bookingRepository.findByShowShowId(showId).stream()
+                .filter(b -> b.getPaymentStatus() == Booking.PaymentStatus.CONFIRMED)
+                .filter(b -> b.getSeatLabels() != null)
+                .flatMap(b -> Arrays.stream(b.getSeatLabels().split(",")))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(bookedSeats);
+    }
+
+    @GetMapping("/show/{showId}/seat-status")
+    public ResponseEntity<List<SeatStatusDTO>> getSeatStatus(@PathVariable Long showId) {
+        Set<String> bookedSeats = bookingRepository.findByShowShowId(showId).stream()
+                .filter(b -> b.getPaymentStatus() == Booking.PaymentStatus.CONFIRMED)
+                .filter(b -> b.getSeatLabels() != null)
+                .flatMap(b -> Arrays.stream(b.getSeatLabels().split(",")))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toSet());
+
+        List<String> lockedSeats = seatLockService.getLockedSeatLabels(showId).stream()
+                .filter(label -> !bookedSeats.contains(label))
+                .collect(Collectors.toList());
+
+        List<SeatStatusDTO> result = new ArrayList<>();
+        bookedSeats.forEach(label -> result.add(new SeatStatusDTO(label, "BOOKED")));
+        lockedSeats.forEach(label -> result.add(new SeatStatusDTO(label, "LOCKED")));
+
+        return ResponseEntity.ok(result);
+    }
+}
+import com.jwtAuthentication.jwt.DTO.responseDto.CancelBookingResponseDto;
+import com.jwtAuthentication.jwt.model.Booking;
+import com.jwtAuthentication.jwt.model.Refund;
+import com.jwtAuthentication.jwt.repository.RefundRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Autowired
+    private RefundRepository refundRepository;
+    /**
+     * POST /cancel-booking
+     * Input: bookingId (as request param or body)
+     * Output: success message + refund details
+     */
+    @PostMapping("/cancel-booking")
+    public ResponseEntity<CancelBookingResponseDto> cancelBookingApi(@RequestParam Long bookingId, @RequestParam Long userId) {
+        try {
+            Booking cancelled = paymentService.cancelUserBooking(bookingId, userId);
+            Refund refund = refundRepository.findAll().stream()
+                    .filter(r -> r.getBooking().getBookingId().equals(bookingId))
+                    .findFirst().orElse(null);
+            double refundAmount = refund != null ? refund.getRefundAmount() : 0.0;
+            String refundStatus = refund != null ? refund.getRefundStatus().name() : "N/A";
+            return ResponseEntity.ok(new CancelBookingResponseDto(true, "Booking cancelled successfully", refundAmount, refundStatus));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new CancelBookingResponseDto(false, ex.getMessage(), 0.0, "FAILED"));
+        }
+    }
+package com.jwtAuthentication.jwt.controller;
+
+import com.jwtAuthentication.jwt.DTO.SeatStatusDTO;
+import com.jwtAuthentication.jwt.model.Booking;
+import com.jwtAuthentication.jwt.repository.BookingRepository;
+import com.jwtAuthentication.jwt.service.PaymentService;
+import com.jwtAuthentication.jwt.service.SeatLockService;
+import com.jwtAuthentication.jwt.util.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/bookings")
+@CrossOrigin(origins = "*")
+public class BookingController {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private SeatLockService seatLockService;
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse<List<Booking>>> getUserBookings(@PathVariable Long userId) {
+        List<Booking> bookings = paymentService.getUserBookings(userId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "User bookings fetched successfully", bookings));
+    }
+
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<ApiResponse<Booking>> cancelBooking(
+            @PathVariable Long bookingId,
+            @RequestParam(name = "userId") Long userId
+    ) {
+        try {
+            Booking cancelled = paymentService.cancelUserBooking(bookingId, userId);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Booking cancelled successfully", cancelled));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(false, ex.getMessage(), null));
+        }
+    }
+
+    /**
+     * Returns all CONFIRMED seat labels for a given show.
+     * Frontend uses this to mark sold seats as unselectable.
+     *
+     * GET /bookings/show/{showId}/booked-seats
+     */
+    @GetMapping("/show/{showId}/booked-seats")
+    public ResponseEntity<List<String>> getBookedSeats(@PathVariable Long showId) {
+        List<String> bookedSeats = bookingRepository.findByShowShowId(showId).stream()
+                .filter(b -> b.getPaymentStatus() == Booking.PaymentStatus.CONFIRMED)
+                .filter(b -> b.getSeatLabels() != null)
+                .flatMap(b -> Arrays.stream(b.getSeatLabels().split(",")))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(bookedSeats);
+    }
+
+    /**
+     * Returns the status of every non-available seat for a show.
+     * Only BOOKED and LOCKED seats are included; all others are implicitly AVAILABLE.
+     *
+     * Response shape: [ { "seatLabel": "A1", "status": "BOOKED" }, ... ]
+     *
+     * GET /bookings/show/{showId}/seat-status
+     */
+    @GetMapping("/show/{showId}/seat-status")
+    public ResponseEntity<List<SeatStatusDTO>> getSeatStatus(@PathVariable Long showId) {
+
+        // Collect CONFIRMED seat labels
+        Set<String> bookedSeats = bookingRepository.findByShowShowId(showId).stream()
+                .filter(b -> b.getPaymentStatus() == Booking.PaymentStatus.CONFIRMED)
+                .filter(b -> b.getSeatLabels() != null)
+                .flatMap(b -> Arrays.stream(b.getSeatLabels().split(",")))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toSet());
+
+        // Active lock labels, excluding seats that are already CONFIRMED (lock would be stale)
+        List<String> lockedSeats = seatLockService.getLockedSeatLabels(showId).stream()
+                .filter(label -> !bookedSeats.contains(label))
+                .collect(Collectors.toList());
+
+        List<SeatStatusDTO> result = new ArrayList<>();
+        bookedSeats.forEach(label -> result.add(new SeatStatusDTO(label, "BOOKED")));
+        lockedSeats.forEach(label -> result.add(new SeatStatusDTO(label, "LOCKED")));
+
+        return ResponseEntity.ok(result);
+    }
+}

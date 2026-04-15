@@ -13,6 +13,8 @@ import com.jwtAuthentication.jwt.service.ActivityService;
 import com.jwtAuthentication.jwt.service.AdminService;
 import com.jwtAuthentication.jwt.service.CloudinaryImageService;
 import com.jwtAuthentication.jwt.util.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+
+        private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     private final AdminService adminService;
     private final ActivityService activityService;
@@ -263,7 +267,20 @@ public class AdminController {
             @RequestBody java.util.Map<String, String> passwordData) {
         String currentPassword = passwordData.get("currentPassword");
         String newPassword = passwordData.get("newPassword");
+
+                logger.info("Password update requested for userId={}", userId);
+
+                if (currentPassword == null || currentPassword.trim().isEmpty()) {
+                        throw new IllegalArgumentException("Current password is required");
+                }
+                if (newPassword == null || newPassword.trim().isEmpty()) {
+                        throw new IllegalArgumentException("New password is required");
+                }
+
         adminService.updatePassword(userId, currentPassword, newPassword);
+
+                logger.info("Password updated successfully for userId={}", userId);
+
         ApiResponse<Void> response = new ApiResponse<>(
                 true,
                 "Password updated successfully",

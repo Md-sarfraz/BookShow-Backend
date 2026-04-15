@@ -16,6 +16,8 @@ import com.jwtAuthentication.jwt.repository.ShowRepository;
 import com.jwtAuthentication.jwt.repository.TheaterRepository;
 import com.jwtAuthentication.jwt.repository.UserRepository;
 import com.jwtAuthentication.jwt.model.NotificationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
     private final MovieRepository movieRepository;
     private final TheaterRepository theaterRepository;
@@ -373,14 +377,31 @@ public class AdminService {
     }
 
     public void updatePassword(int userId, String currentPassword, String newPassword) {
+        logger.debug("Validating password update request for userId={}", userId);
+
+        if (currentPassword == null || currentPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("Current password cannot be empty");
+        }
+
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be empty");
+        }
+
+        if (newPassword.length() < 6) {
+            throw new IllegalArgumentException("New password must be at least 6 characters long");
+        }
+
         User user = getUserById(userId);
         
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new RuntimeException("Current password is incorrect");
+            logger.warn("Password update denied due to incorrect current password for userId={}", userId);
+            throw new IllegalArgumentException("Current password is incorrect");
         }
         
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+
+        logger.info("Password changed and persisted for userId={}", userId);
     }
 
     public User updateUserAvatar(int userId, String imageUrl) {

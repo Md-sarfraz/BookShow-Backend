@@ -71,7 +71,7 @@ public class SecurityConfig {
                                 "/events/**",
                                 "/theater/**",
                                 "/shows/**",
-                                "/bookings/**",
+                            "/bookings/show/**",
                                 "/cities/**"
                         ).permitAll()
 
