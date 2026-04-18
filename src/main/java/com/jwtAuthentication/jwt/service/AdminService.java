@@ -129,7 +129,7 @@ public class AdminService {
             case PENDING   -> newStatus == Booking.PaymentStatus.CONFIRMED
                            || newStatus == Booking.PaymentStatus.FAILED;
             case CONFIRMED -> newStatus == Booking.PaymentStatus.CANCELLED;
-            case FAILED, CANCELLED -> false;
+            case FAILED, EXPIRED, CANCELLED -> false;
         };
 
         if (!allowed) {
@@ -137,6 +137,7 @@ public class AdminService {
                 case PENDING   -> "CONFIRMED or FAILED";
                 case CONFIRMED -> "CANCELLED";
                 case FAILED    -> "none — FAILED is a terminal state";
+                case EXPIRED   -> "none — EXPIRED is a terminal state";
                 case CANCELLED -> "none — CANCELLED is a terminal state";
             };
             throw new RuntimeException(

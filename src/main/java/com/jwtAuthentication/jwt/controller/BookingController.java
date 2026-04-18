@@ -116,6 +116,25 @@ public class BookingController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Bookings fetched successfully", bookings));
     }
 
+    @GetMapping("/reference/{bookingReference}")
+    public ResponseEntity<ApiResponse<Booking>> getBookingByReference(
+            @PathVariable String bookingReference,
+            Authentication authentication
+    ) {
+        Long requesterId = resolveCurrentUserId(authentication);
+        boolean isAdmin = isAdmin(authentication);
+
+        Booking booking = bookingRepository.findByBookingReference(bookingReference)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for reference: " + bookingReference));
+
+        if (!isAdmin && !requesterId.equals(booking.getUserId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse<>(false, "You are not allowed to access this booking", null));
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Booking fetched successfully", booking));
+    }
+
     @GetMapping("/user/{userId}/refunds")
     public ResponseEntity<ApiResponse<List<RefundHistoryItemDto>>> getUserRefundHistory(
             @PathVariable Long userId,

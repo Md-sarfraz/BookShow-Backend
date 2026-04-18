@@ -15,6 +15,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Optional<Booking> findByRazorpayOrderId(String razorpayOrderId);
 
+    Optional<Booking> findByRazorpayPaymentId(String razorpayPaymentId);
+
     Optional<Booking> findByBookingReference(String bookingReference);
 
     List<Booking> findByUserId(Long userId);
@@ -22,6 +24,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     List<Booking> findByShowShowId(Long showId);
+
+    List<Booking> findByPaymentStatusAndExpiresAtBefore(Booking.PaymentStatus paymentStatus, LocalDateTime now);
 
     // Count all confirmed bookings
     long countByPaymentStatus(Booking.PaymentStatus paymentStatus);

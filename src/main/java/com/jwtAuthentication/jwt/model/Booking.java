@@ -54,6 +54,10 @@ public class Booking {
     @Column(name = "razorpay_payment_id")
     private String razorpayPaymentId;
 
+    @Lob
+    @Column(name = "qr_code", columnDefinition = "LONGTEXT")
+    private String qrCode;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
@@ -69,6 +73,10 @@ public class Booking {
     @Column(name = "confirmed_at")
     private LocalDateTime confirmedAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "expires_at")
+    private LocalDateTime expiresAt;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -81,6 +89,7 @@ public class Booking {
         PENDING,    // Order created, payment not done yet
         CONFIRMED,  // Payment verified and successful
         FAILED,     // Payment failed
+        EXPIRED,    // Payment window elapsed before successful payment
         CANCELLED   // Booking cancelled
     }
 }

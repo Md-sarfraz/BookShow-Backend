@@ -7,3 +7,9 @@ CREATE TABLE IF NOT EXISTS notifications (
     PRIMARY KEY (id)
 );
 
+-- Ensure bookings payment status supports EXPIRED state introduced in backend enum.
+-- This statement is safe with spring.sql.init.continue-on-error=true when table is absent.
+ALTER TABLE bookings
+    MODIFY COLUMN payment_status ENUM('PENDING','CONFIRMED','FAILED','EXPIRED','CANCELLED')
+    NOT NULL DEFAULT 'PENDING';
+

@@ -61,6 +61,8 @@ public class SecurityConfig {
                                 "/auth/register",
                                 "/auth/login",
                                 "/health",
+                                "/api/webhook/payment",
+                                "/webhook/payment",
                                 "/ws/**",
                             "/api/v1/ws/**"
                         ).permitAll()
@@ -75,8 +77,12 @@ public class SecurityConfig {
                                 "/cities/**"
                         ).permitAll()
 
-                        // Movie payment endpoints — permit all (security is handled via HMAC signature verification)
-                        .requestMatchers("/payment/**").permitAll()
+                        // Movie payment endpoints — require auth; booking identity comes from JWT.
+                        .requestMatchers(HttpMethod.POST,
+                            "/payment/create-order",
+                            "/payment/verify",
+                            "/payment/failed"
+                        ).authenticated()
 
                         // Event booking/payment flow for logged-in users
                         .requestMatchers(HttpMethod.POST,

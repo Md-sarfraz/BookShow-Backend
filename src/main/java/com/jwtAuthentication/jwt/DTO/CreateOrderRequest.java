@@ -7,5 +7,5 @@ import java.util.List;
 public class CreateOrderRequest {
     private Long showId;
     private List<String> seatLabels;
-    private Long userId; // optional, for guest booking
+    private Long userId; // set server-side from authenticated JWT principal
 }

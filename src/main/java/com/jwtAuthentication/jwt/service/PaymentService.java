@@ -18,11 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HexFormat;
-import java.util.List;
 
 @Service
 public class PaymentService {
@@ -32,6 +29,9 @@ public class PaymentService {
 
     @Value("${razorpay.key.secret}")
     private String razorpayKeySecret;
+
+    @Value("${app.payment.window-minutes:5}")
+    private int paymentWindowMinutes;
 
     @Autowired
     private BookingRepository bookingRepository;
@@ -105,6 +105,7 @@ public class PaymentService {
         booking.setTotalAmount(totalAmount);
         booking.setRazorpayOrderId(razorpayOrderId);
         booking.setPaymentStatus(Booking.PaymentStatus.PENDING);
+        booking.setExpiresAt(LocalDateTime.now().plusMinutes(paymentWindowMinutes));
 
         Booking savedBooking = bookingRepository.save(booking);
 
@@ -119,99 +120,115 @@ public class PaymentService {
     }
 
     /**
-     * STEP 2: Verify Razorpay payment signature server-side (HMAC-SHA256).
-     * This is the security-critical step — only backend has the secret key.
+     * Frontend can call this endpoint for immediate UX feedback,
+     * but booking state is NOT changed here. Webhook remains source of truth.
      */
+    public boolean validatePaymentSignature(PaymentVerificationRequest request) {
+        try {
+            String payload = request.getRazorpayOrderId() + "|" + request.getRazorpayPaymentId();
+
+            Mac mac = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(
+                    razorpayKeySecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+            mac.init(secretKeySpec);
+
+            byte[] hash = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
+            String computedSignature = HexFormat.of().formatHex(hash);
+            return computedSignature.equals(request.getRazorpaySignature());
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public Booking getPendingBookingByOrderId(String razorpayOrderId) {
+        return bookingRepository.findByRazorpayOrderId(razorpayOrderId)
+                .orElseThrow(() -> new RuntimeException("Booking not found for orderId: " + razorpayOrderId));
+    }
+
     @Transactional
-    public BookingConfirmationResponse verifyAndConfirmPayment(PaymentVerificationRequest request)
-            throws NoSuchAlgorithmException, InvalidKeyException {
-
-        // --- SIGNATURE VERIFICATION ---
-        // Razorpay signs: razorpay_order_id + "|" + razorpay_payment_id
-        String payload = request.getRazorpayOrderId() + "|" + request.getRazorpayPaymentId();
-
-        Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(
-                razorpayKeySecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-        mac.init(secretKeySpec);
-
-        byte[] hash = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
-        String computedSignature = HexFormat.of().formatHex(hash);
-
-        if (!computedSignature.equals(request.getRazorpaySignature())) {
-            // Signature mismatch — possible tampered/fake payment, reject it
-            throw new SecurityException("Payment signature verification failed. Possible fraud attempt.");
+    public boolean markExpiredIfNeeded(Booking booking) {
+        if (booking == null) {
+            return false;
         }
 
-        // --- SIGNATURE VALID — Update booking record ---
-        Booking booking = bookingRepository
-                .findByRazorpayOrderId(request.getRazorpayOrderId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Booking not found for orderId: " + request.getRazorpayOrderId()));
+        if (booking.getPaymentStatus() != Booking.PaymentStatus.PENDING) {
+            return false;
+        }
 
-        booking.setRazorpayPaymentId(request.getRazorpayPaymentId());
-        booking.setPaymentStatus(Booking.PaymentStatus.CONFIRMED);
-        booking.setConfirmedAt(LocalDateTime.now());
+        LocalDateTime expiresAt = booking.getExpiresAt();
+        if (expiresAt == null) {
+            return false;
+        }
 
-        Booking confirmedBooking = bookingRepository.save(booking);
+        // At the exact expiry boundary, session is treated as expired.
+        if (!LocalDateTime.now().isBefore(expiresAt)) {
+            booking.setPaymentStatus(Booking.PaymentStatus.EXPIRED);
+            bookingRepository.save(booking);
+            if (booking.getRazorpayOrderId() != null && !booking.getRazorpayOrderId().isBlank()) {
+                seatLockService.releaseLocksForOrder(booking.getRazorpayOrderId());
+            }
+            return true;
+        }
 
-        // Build response
-        Show show = confirmedBooking.getShow();
+        return false;
+    }
 
-        String movieName = show.getMovie() != null ? show.getMovie().getTitle() : "Unknown movie";
-        notificationService.createAndBroadcast(
-            "New booking for " + movieName,
-            NotificationType.BOOKING
-        );
-        notificationService.createAndBroadcast(
-            "Payment successful for " + movieName,
-            NotificationType.PAYMENT
-        );
+    public void assertNotExpired(Booking booking) {
+        if (booking == null) {
+            throw new RuntimeException("Booking not found");
+        }
 
-        // Release seat locks — payment is confirmed, the booking record is the true source of truth.
-        seatLockService.releaseLocksForOrder(request.getRazorpayOrderId());
+        if (booking.getPaymentStatus() == Booking.PaymentStatus.EXPIRED) {
+            throw new RuntimeException("Session expired");
+        }
 
-        return new BookingConfirmationResponse(
-                confirmedBooking.getBookingId(),
-                confirmedBooking.getBookingReference(),
-                confirmedBooking.getRazorpayPaymentId(),
-                confirmedBooking.getTotalAmount(),
-                confirmedBooking.getBaseAmount(),
-                confirmedBooking.getConvenienceFee(),
-                confirmedBooking.getDiscount() != null ? confirmedBooking.getDiscount() : 0.0,
-                confirmedBooking.getNumberOfSeats(),
-                confirmedBooking.getSeatLabels(),
-                show.getMovie() != null ? show.getMovie().getTitle() : "",
-                show.getTheater() != null ? show.getTheater().getName() : "",
-                show.getTheater() != null && show.getTheater().getCity() != null ? show.getTheater().getCity().getName() : "",
-                show.getShowDate() != null ? show.getShowDate().toString() : "",
-                show.getShowTime() != null ? show.getShowTime().toString() : "",
-                confirmedBooking.getPaymentStatus().name()
-        );
+        if (markExpiredIfNeeded(booking)) {
+            throw new RuntimeException("Session expired");
+        }
     }
 
     /**
-     * Mark a PENDING booking as FAILED when Razorpay reports payment failure.
-     * Only transitions from PENDING to avoid overwriting a later CONFIRMED state
-     * in case of out-of-order callbacks.
+     * Fallback confirmation path:
+     * If webhook is delayed but payment signature is verified, confirm booking once
+     * while preserving idempotency and expiry checks.
      */
     @Transactional
-    public void handlePaymentFailed(String razorpayOrderId) {
-        bookingRepository.findByRazorpayOrderId(razorpayOrderId).ifPresent(booking -> {
-            if (booking.getPaymentStatus() == Booking.PaymentStatus.PENDING) {
-                booking.setPaymentStatus(Booking.PaymentStatus.FAILED);
-                bookingRepository.save(booking);
+    public Booking confirmBookingAfterSignatureVerified(String razorpayOrderId, String razorpayPaymentId) {
+        Booking booking = bookingRepository.findByRazorpayOrderId(razorpayOrderId)
+                .orElseThrow(() -> new RuntimeException("Booking not found for orderId: " + razorpayOrderId));
 
-                String movieName = booking.getShow() != null && booking.getShow().getMovie() != null
-                        ? booking.getShow().getMovie().getTitle()
-                        : "Unknown movie";
-                notificationService.createAndBroadcast(
-                        "Payment failed for " + movieName,
-                        NotificationType.PAYMENT
-                );
-            }
-        });
-        // Release seat locks so others can now book these seats
-        seatLockService.releaseLocksForOrder(razorpayOrderId);
+        if (booking.getPaymentStatus() == Booking.PaymentStatus.CONFIRMED) {
+            return booking;
+        }
+
+        if (booking.getPaymentStatus() == Booking.PaymentStatus.EXPIRED) {
+            throw new RuntimeException("Session expired");
+        }
+
+        if (booking.getPaymentStatus() == Booking.PaymentStatus.FAILED
+                || booking.getPaymentStatus() == Booking.PaymentStatus.CANCELLED) {
+            throw new RuntimeException("Booking is not eligible for confirmation");
+        }
+
+        assertNotExpired(booking);
+
+        booking.setPaymentStatus(Booking.PaymentStatus.CONFIRMED);
+        booking.setConfirmedAt(LocalDateTime.now());
+        if (razorpayPaymentId != null && !razorpayPaymentId.isBlank()) {
+            booking.setRazorpayPaymentId(razorpayPaymentId);
+        }
+
+        Booking saved = bookingRepository.save(booking);
+        if (saved.getRazorpayOrderId() != null && !saved.getRazorpayOrderId().isBlank()) {
+            seatLockService.releaseLocksForOrder(saved.getRazorpayOrderId());
+        }
+
+        String movieName = saved.getShow() != null && saved.getShow().getMovie() != null
+                ? saved.getShow().getMovie().getTitle()
+                : "Unknown movie";
+        notificationService.createAndBroadcast("New booking for " + movieName, NotificationType.BOOKING);
+        notificationService.createAndBroadcast("Payment successful for " + movieName, NotificationType.PAYMENT);
+
+        return saved;
     }
 }
