@@ -357,11 +357,18 @@ public class PaymentWebhookService {
 
     private void sendConfirmationEmailIfPossible(Booking booking) {
         if (booking.getUserId() == null) {
+            log.warn("Skipping booking confirmation email: userId is null for bookingRef={}", booking.getBookingReference());
             return;
         }
 
         userRepository.findById(booking.getUserId().intValue())
                 .map(User::getEmail)
-                .ifPresent(email -> bookingEmailService.sendBookingConfirmedEmail(email, booking));
+                .ifPresentOrElse(
+                        email -> {
+                            bookingEmailService.sendBookingConfirmedEmail(email, booking);
+                            log.info("Queued booking confirmation email for bookingRef={} to={}", booking.getBookingReference(), email);
+                        },
+                        () -> log.warn("Skipping booking confirmation email: user not found for userId={} bookingRef={}", booking.getUserId(), booking.getBookingReference())
+                );
     }
 }

@@ -24,6 +24,8 @@ import java.util.HexFormat;
 @Service
 public class PaymentService {
 
+    public static final int MAX_TICKETS_PER_BOOKING = 5;
+
     @Value("${razorpay.key.id}")
     private String razorpayKeyId;
 
@@ -52,6 +54,10 @@ public class PaymentService {
     @Transactional
     public CreateOrderResponse createOrder(CreateOrderRequest request) throws RazorpayException {
 
+        if (request.getSeatLabels() == null || request.getSeatLabels().isEmpty()) {
+            throw new RuntimeException("No seats selected");
+        }
+
         // Fetch show from DB — amount is determined HERE, not by frontend
         Show show = showRepository.findById(request.getShowId())
                 .orElseThrow(() -> new RuntimeException("Show not found: " + request.getShowId()));
@@ -61,8 +67,8 @@ public class PaymentService {
         }
 
         int seatCount = request.getSeatLabels().size();
-        if (seatCount == 0) {
-            throw new RuntimeException("No seats selected");
+        if (seatCount > MAX_TICKETS_PER_BOOKING) {
+            throw new RuntimeException("You can book maximum 5 tickets at a time");
         }
 
         // Server-side amount calculation (cannot be tampered by client)

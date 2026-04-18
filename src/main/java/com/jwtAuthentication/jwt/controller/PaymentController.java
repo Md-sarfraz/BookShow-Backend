@@ -41,6 +41,11 @@ public class PaymentController {
                         .body(new ApiResponse<>(false, "showId and seatLabels are required", null));
             }
 
+                if (request.getSeatLabels().size() > PaymentService.MAX_TICKETS_PER_BOOKING) {
+                return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, "You can book maximum 5 tickets at a time", null));
+                }
+
             Long userId = resolveCurrentUserId(authentication);
             request.setUserId(userId);
 
