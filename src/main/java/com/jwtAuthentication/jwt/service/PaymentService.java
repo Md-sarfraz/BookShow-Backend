@@ -4,11 +4,14 @@ import com.jwtAuthentication.jwt.DTO.*;
 import com.jwtAuthentication.jwt.model.Booking;
 import com.jwtAuthentication.jwt.model.NotificationType;
 import com.jwtAuthentication.jwt.model.Show;
+import com.jwtAuthentication.jwt.model.User;
 import com.jwtAuthentication.jwt.repository.BookingRepository;
 import com.jwtAuthentication.jwt.repository.ShowRepository;
+import com.jwtAuthentication.jwt.repository.UserRepository;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HexFormat;
 
+@Slf4j
 @Service
 public class PaymentService {
 
@@ -46,6 +50,15 @@ public class PaymentService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private QRCodeService qrCodeService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * STEP 1: Create a Razorpay order server-side.
@@ -224,6 +237,10 @@ public class PaymentService {
             booking.setRazorpayPaymentId(razorpayPaymentId);
         }
 
+        if (booking.getQrCode() == null || booking.getQrCode().isBlank()) {
+            booking.setQrCode(qrCodeService.generateBase64Png(booking));
+        }
+
         Booking saved = bookingRepository.save(booking);
         if (saved.getRazorpayOrderId() != null && !saved.getRazorpayOrderId().isBlank()) {
             seatLockService.releaseLocksForOrder(saved.getRazorpayOrderId());
@@ -234,7 +251,36 @@ public class PaymentService {
                 : "Unknown movie";
         notificationService.createAndBroadcast("New booking for " + movieName, NotificationType.BOOKING);
         notificationService.createAndBroadcast("Payment successful for " + movieName, NotificationType.PAYMENT);
+        sendConfirmationEmailIfPossible(saved);
 
         return saved;
+    }
+
+    private void sendConfirmationEmailIfPossible(Booking booking) {
+        if (booking.getUserId() == null) {
+            log.warn("Skipping email: booking userId is null for bookingRef={}", booking.getBookingReference());
+            return;
+        }
+
+        userRepository.findById(booking.getUserId().intValue())
+                .map(User::getEmail)
+                .ifPresentOrElse(
+                        email -> {
+                            // Eagerly load Show and related entities before passing to async method
+                            // This prevents LazyInitializationException in async context
+                            if (booking.getShow() != null) {
+                                org.hibernate.Hibernate.initialize(booking.getShow());
+                                if (booking.getShow().getMovie() != null) {
+                                    org.hibernate.Hibernate.initialize(booking.getShow().getMovie());
+                                }
+                                if (booking.getShow().getTheater() != null) {
+                                    org.hibernate.Hibernate.initialize(booking.getShow().getTheater());
+                                }
+                            }
+                            emailService.sendBookingConfirmationTicket(email, booking);
+                            log.info("Queued booking confirmation email for bookingRef={} to={}", booking.getBookingReference(), email);
+                        },
+                        () -> log.warn("Skipping email: user not found for userId={} bookingRef={}", booking.getUserId(), booking.getBookingReference())
+                );
     }
 }

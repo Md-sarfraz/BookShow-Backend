@@ -33,8 +33,8 @@ public class PaymentWebhookService {
     private final RazorpayWebhookSignatureVerifier signatureVerifier;
     private final SeatLockService seatLockService;
     private final NotificationService notificationService;
-    private final TicketQrCodeService ticketQrCodeService;
-    private final BookingEmailService bookingEmailService;
+    private final QRCodeService qrCodeService;
+    private final EmailService emailService;
     private final UserRepository userRepository;
 
     @Transactional
@@ -181,7 +181,7 @@ public class PaymentWebhookService {
                 }
 
                 if (booking.getQrCode() == null || booking.getQrCode().isBlank()) {
-                    booking.setQrCode(ticketQrCodeService.generateBase64Png(booking));
+                    booking.setQrCode(qrCodeService.generateBase64Png(booking));
                 }
 
                 bookingRepository.save(booking);
@@ -365,7 +365,18 @@ public class PaymentWebhookService {
                 .map(User::getEmail)
                 .ifPresentOrElse(
                         email -> {
-                            bookingEmailService.sendBookingConfirmedEmail(email, booking);
+                            // Eagerly load Show and related entities before passing to async method
+                            // This prevents LazyInitializationException in async context
+                            if (booking.getShow() != null) {
+                                org.hibernate.Hibernate.initialize(booking.getShow());
+                                if (booking.getShow().getMovie() != null) {
+                                    org.hibernate.Hibernate.initialize(booking.getShow().getMovie());
+                                }
+                                if (booking.getShow().getTheater() != null) {
+                                    org.hibernate.Hibernate.initialize(booking.getShow().getTheater());
+                                }
+                            }
+                            emailService.sendBookingConfirmationTicket(email, booking);
                             log.info("Queued booking confirmation email for bookingRef={} to={}", booking.getBookingReference(), email);
                         },
                         () -> log.warn("Skipping booking confirmation email: user not found for userId={} bookingRef={}", booking.getUserId(), booking.getBookingReference())

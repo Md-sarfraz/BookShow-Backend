@@ -103,7 +103,7 @@ public class PaymentController {
 
             return ResponseEntity.ok(new ApiResponse<>(
                     true,
-                    "Payment signature validated and booking confirmation initiated.",
+                    "Payment signature validated. Booking confirmation initiated. Ticket will be sent to your email after successful confirmation.",
                     "CONFIRMATION_INITIATED"
             ));
 

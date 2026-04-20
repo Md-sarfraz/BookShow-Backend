@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 "/auth/register",
                                 "/auth/login",
                                 "/health",
+                                "/debug/**",
                                 "/api/webhook/payment",
                                 "/webhook/payment",
                                 "/ws/**",
