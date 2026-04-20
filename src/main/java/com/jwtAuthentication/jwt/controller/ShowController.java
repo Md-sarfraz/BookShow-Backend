@@ -74,14 +74,9 @@ public class ShowController {
             @PathVariable int movieId,
             @RequestParam(required = false) Integer cityId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        
-        System.out.println("========================================");
-        System.out.println("📋 GET /api/v1/shows/by-movie/" + movieId);
-        System.out.println("   cityId: " + cityId + ", date: " + date);
-        System.out.println("========================================");
-        
+
         List<Show> shows;
-        
+
         if (cityId != null && date != null) {
             shows = showService.getShowsByMovieAndCityAndDate(movieId, cityId, date);
         } else if (cityId != null) {
@@ -91,8 +86,7 @@ public class ShowController {
         } else {
             shows = showService.getShowsByMovie(movieId);
         }
-        
-        System.out.println("📤 Returning " + shows.size() + " shows to frontend");
+
         return ResponseEntity.ok(new ApiResponse<>(true, "Shows fetched successfully", shows));
     }
     

@@ -30,25 +30,6 @@ public class MovieController {
     @Autowired
     private ObjectMapper objectMapper; // For manual JSON parsing
 
-//    @PostMapping("/createMovie")
-//    public ResponseEntity<Movie> addMovie(
-//            @RequestPart("movie") String movieJson,
-//            @RequestPart("image") MultipartFile imageFile) {
-//        try {
-//            // Convert movie JSON String to Movie object
-//            System.out.println("this is movie" + movieJson);
-//
-//            Movie movie = objectMapper.readValue(movieJson, Movie.class);
-////            movie.setTheater();
-//
-//            // Save movie with image
-//            Movie savedMovie = movieService.saveMovie(movie, imageFile);
-//            return ResponseEntity.ok(savedMovie);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(500).body(null);
-//        }
-//    }
 @PostMapping("/createMovie")
 public ResponseEntity<ApiResponse<Void>> addMovie(
         @RequestPart("movie") String movieJson,

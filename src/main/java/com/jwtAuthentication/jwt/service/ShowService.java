@@ -80,18 +80,7 @@ public class ShowService {
     
     // Get shows by movie
     public List<Show> getShowsByMovie(int movieId) {
-        System.out.println("🔍 Getting ALL shows for movie " + movieId + " (no filters)");
-        List<Show> shows = showRepository.findByMovieMovieId(movieId);
-        System.out.println("✅ Found " + shows.size() + " shows total");
-        if (!shows.isEmpty()) {
-            shows.forEach(show -> {
-                System.out.println("   📍 Show " + show.getShowId() + ": " +
-                    show.getTheater().getName() + " in " + 
-                    (show.getTheater().getCity() != null ? show.getTheater().getCity().getName() : "N/A") + " on " + 
-                    show.getShowDate());
-            });
-        }
-        return shows;
+        return showRepository.findByMovieMovieId(movieId);
     }
     
     // Get shows by movie and date
@@ -106,25 +95,8 @@ public class ShowService {
     
     // Get shows by movie, cityId and date
     public List<Show> getShowsByMovieAndCityAndDate(int movieId, Integer cityId, LocalDate date) {
-        System.out.println("========================================");
-        System.out.println("🔍 ShowService.getShowsByMovieAndCityAndDate");
-        System.out.println("   movieId: " + movieId);
-        System.out.println("   cityId: " + cityId);
-        System.out.println("   date: " + date);
-        System.out.println("========================================");
-        
-        List<Show> shows = showRepository.findByMovieIdAndCityIdAndDate(movieId, cityId, date);
-        
-        System.out.println("✅ Query returned " + shows.size() + " shows");
-        if (!shows.isEmpty()) {
-            shows.forEach(show -> {
-                System.out.println("   📍 Show: " + show.getShowId() + 
-                    " | Theater: " + show.getTheater().getName() + 
-                    " | City: " + (show.getTheater().getCity() != null ? show.getTheater().getCity().getName() : "N/A"));
-            });
-        }
-        System.out.println("========================================");
-        return shows;
+
+        return showRepository.findByMovieIdAndCityIdAndDate(movieId, cityId, date);
     }
     
     // Get upcoming shows for a movie
