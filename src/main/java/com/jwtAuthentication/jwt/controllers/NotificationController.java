@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/notifications")
@@ -41,5 +43,13 @@ public class NotificationController {
     public ResponseEntity<ApiResponse<Notification>> markAsRead(@PathVariable Long id) {
         Notification updated = notificationService.markAsRead(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "Notification marked as read", updated));
+    }
+
+    @PutMapping("/read-all")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> markAllAsRead() {
+        int updatedCount = notificationService.markAllAsRead();
+        Map<String, Object> response = new HashMap<>();
+        response.put("updatedCount", updatedCount);
+        return ResponseEntity.ok(new ApiResponse<>(true, "All notifications marked as read", response));
     }
 }

@@ -12,12 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
+    private static final String TOPIC_ADMIN = "/topic/admin";
+    private static final String TOPIC_NEW_NOTIFICATION = "/topic/new_notification";
 
     private final NotificationRepository notificationRepository;
     private final SimpMessagingTemplate messagingTemplate;
@@ -62,6 +66,17 @@ public class NotificationService {
         return n;
     }
 
+    private Map<String, Object> toSocketPayload(Notification notification) {
+        boolean isRead = Boolean.TRUE.equals(notification.getIsRead());
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("event", "new_notification");
+        payload.put("id", notification.getId() == null ? null : String.valueOf(notification.getId()));
+        payload.put("message", notification.getMessage());
+        payload.put("isRead", isRead);
+        payload.put("createdAt", notification.getCreatedAt() == null ? LocalDateTime.now().toString() : notification.getCreatedAt().toString());
+        return payload;
+    }
+
     @Transactional
     public Notification createAndBroadcast(String message, NotificationType type) {
         Notification notification = new Notification();
@@ -98,7 +113,10 @@ public class NotificationService {
         }
 
         try {
-            messagingTemplate.convertAndSend("/topic/admin", payload);
+            // Keep legacy topic for existing subscribers.
+            messagingTemplate.convertAndSend(TOPIC_ADMIN, payload);
+            // Primary event topic consumed by the frontend real-time listener.
+            messagingTemplate.convertAndSend(TOPIC_NEW_NOTIFICATION, toSocketPayload(payload));
         } catch (Exception ex) {
             logger.error("Failed to broadcast notification over websocket.", ex);
         }
@@ -164,6 +182,17 @@ public class NotificationService {
                 return mapNotification(rs);
             }
             throw new RuntimeException("Notification not found with id: " + id);
+        }
+    }
+
+    @Transactional
+    public int markAllAsRead() {
+        try {
+            return notificationRepository.markAllAsRead();
+        } catch (Exception ex) {
+            logger.error("Failed to mark all notifications as read via JPA, trying JDBC fallback.", ex);
+            ensureNotificationsTableExists();
+            return jdbcTemplate.update("UPDATE notifications SET is_read = ? WHERE is_read = ?", true, false);
         }
     }
 }
