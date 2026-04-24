@@ -27,9 +27,6 @@ public class BookingCancellationService {
     @Value("${app.cancellation.cutoff-hours:2}")
     private long cancellationCutoffHours;
 
-    @Value("${app.refund.partial-percentage:70}")
-    private double partialRefundPercentage;
-
     @Autowired
     private BookingRepository bookingRepository;
 
@@ -40,7 +37,7 @@ public class BookingCancellationService {
     private RefundRepository refundRepository;
 
     @Autowired
-    private RefundProcessor refundProcessor;
+    private BookingRefundAsyncService bookingRefundAsyncService;
 
     @Autowired
     private SeatLockService seatLockService;
@@ -61,7 +58,9 @@ public class BookingCancellationService {
                 calc.convenienceFeeDeducted,
                 calc.refundPercentage,
                 calc.refundStatus,
-                calc.showDateTime.toString()
+                calc.bookingTime.toString(),
+                calc.cancellationDeadline.toString(),
+                cancellationCutoffHours
         );
     }
 
@@ -79,6 +78,7 @@ public class BookingCancellationService {
         }
 
         booking.setPaymentStatus(Booking.PaymentStatus.CANCELLED);
+        booking.setStatus(Booking.BookingStatus.CANCELLED);
         bookingRepository.save(booking);
 
         // Return sold seats to inventory immediately.
@@ -109,29 +109,23 @@ public class BookingCancellationService {
             refund.setRefundStatus(Refund.RefundStatus.SUCCESS);
             refund.setProviderReference("NO_REFUND");
             refund.setFailureReason("No refund as per cancellation policy");
+            refundRepository.save(refund);
         } else {
-            RefundResult result = refundProcessor.initiateRefund(booking, calc.refundAmount);
-            if (result.successful()) {
-                refund.setRefundStatus(Refund.RefundStatus.SUCCESS);
-                refund.setProviderReference(result.providerReference());
-            } else {
-                refund.setRefundStatus(Refund.RefundStatus.FAILED);
-                refund.setFailureReason(result.errorMessage());
-            }
+            refundRepository.save(refund);
+            bookingRefundAsyncService.processRefundAsync(refund.getRefundId(), booking.getBookingId(), calc.refundAmount);
         }
-        refundRepository.save(refund);
 
         publishSeatRelease(booking);
 
-        String message = refund.getRefundStatus() == Refund.RefundStatus.FAILED
-                ? "Booking cancelled. Refund initiation failed. Please contact support."
-                : "Booking cancelled successfully";
+        String message = calc.refundAmount <= 0
+                ? "Booking cancelled successfully"
+                : "Booking cancelled successfully. Refund initiated.";
 
         return new CancelBookingResponseDto(
                 true,
                 message,
                 booking.getBookingId(),
-                booking.getPaymentStatus().name(),
+            booking.getStatus().name(),
                 refund.getRefundableAmount(),
                 refund.getRefundAmount(),
                 refund.getConvenienceFeeDeducted(),
@@ -157,7 +151,8 @@ public class BookingCancellationService {
     }
 
     private Calculation calculateRefund(Booking booking, LocalDateTime now) {
-        if (booking.getPaymentStatus() == Booking.PaymentStatus.CANCELLED) {
+        if (booking.getStatus() == Booking.BookingStatus.CANCELLED
+                || booking.getPaymentStatus() == Booking.PaymentStatus.CANCELLED) {
             return Calculation.blocked("Booking is already cancelled", booking);
         }
 
@@ -165,40 +160,28 @@ public class BookingCancellationService {
             return Calculation.blocked("Only confirmed bookings can be cancelled", booking);
         }
 
-        Show show = booking.getShow();
-        if (show == null || show.getShowDate() == null || show.getShowTime() == null) {
-            throw new IllegalStateException("Show schedule is missing for this booking");
+        LocalDateTime bookingTime = booking.getCreatedAt();
+        if (bookingTime == null) {
+            throw new IllegalStateException("Booking time is missing for this booking");
         }
 
-        LocalDateTime showDateTime = LocalDateTime.of(show.getShowDate(), show.getShowTime());
-
-        if (!now.isBefore(showDateTime)) {
-            return Calculation.blocked("Cancellation is not allowed after showtime", booking, showDateTime);
+        long windowHours = Math.max(0, cancellationCutoffHours);
+        Duration elapsedSinceBooking = Duration.between(bookingTime, now);
+        if (elapsedSinceBooking.isNegative()) {
+            elapsedSinceBooking = Duration.ZERO;
         }
+        Duration cancellationWindow = Duration.ofHours(windowHours);
+        LocalDateTime cancellationDeadline = bookingTime.plusHours(windowHours);
 
-        long minutesToShow = Duration.between(now, showDateTime).toMinutes();
-        long cutoffMinutes = Math.max(0, cancellationCutoffHours * 60);
-
-        if (minutesToShow < cutoffMinutes) {
-            return Calculation.blocked(
-                    "Cancellation is allowed only up to " + cancellationCutoffHours + " hours before showtime",
-                    booking,
-                    showDateTime
-            );
+        if (elapsedSinceBooking.compareTo(cancellationWindow) > 0) {
+            return Calculation.blocked("Cancellation window expired", booking, bookingTime, cancellationDeadline);
         }
 
         double total = nonNull(booking.getTotalAmount());
         double convenienceFee = Math.max(0, nonNull(booking.getConvenienceFee()));
         double refundableBase = round2(Math.max(0, total - convenienceFee));
 
-        double refundPercentage;
-        if (minutesToShow > 24 * 60) {
-            refundPercentage = 100.0;
-        } else if (minutesToShow >= 2 * 60) {
-            refundPercentage = partialRefundPercentage;
-        } else {
-            refundPercentage = 0.0;
-        }
+        double refundPercentage = refundableBase <= 0 ? 0.0 : 100.0;
 
         double refundAmount = round2(refundableBase * (refundPercentage / 100.0));
         String refundStatus = refundAmount <= 0 ? Refund.RefundStatus.SUCCESS.name() : Refund.RefundStatus.PENDING.name();
@@ -211,7 +194,8 @@ public class BookingCancellationService {
                 convenienceFee,
                 round2(refundPercentage),
                 refundStatus,
-                showDateTime
+                bookingTime,
+                cancellationDeadline
         );
     }
 
@@ -253,15 +237,20 @@ public class BookingCancellationService {
             double convenienceFeeDeducted,
             double refundPercentage,
             String refundStatus,
-            LocalDateTime showDateTime
+            LocalDateTime bookingTime,
+            LocalDateTime cancellationDeadline
     ) {
         private static Calculation blocked(String message, Booking booking) {
-            return blocked(message, booking, booking.getShow() != null && booking.getShow().getShowDate() != null && booking.getShow().getShowTime() != null
-                    ? LocalDateTime.of(booking.getShow().getShowDate(), booking.getShow().getShowTime())
-                    : LocalDateTime.now());
+            LocalDateTime bookingTime = booking.getCreatedAt() != null ? booking.getCreatedAt() : LocalDateTime.now();
+            return blocked(message, booking, bookingTime, bookingTime);
         }
 
-        private static Calculation blocked(String message, Booking booking, LocalDateTime showDateTime) {
+        private static Calculation blocked(
+            String message,
+            Booking booking,
+            LocalDateTime bookingTime,
+            LocalDateTime cancellationDeadline
+        ) {
             double total = booking.getTotalAmount() == null ? 0.0 : booking.getTotalAmount();
             double convenience = booking.getConvenienceFee() == null ? 0.0 : Math.max(0, booking.getConvenienceFee());
             double refundableBase = Math.max(0, total - convenience);
@@ -273,7 +262,8 @@ public class BookingCancellationService {
                     convenience,
                     0.0,
                     Refund.RefundStatus.SUCCESS.name(),
-                    showDateTime
+                    bookingTime,
+                    cancellationDeadline
             );
         }
     }

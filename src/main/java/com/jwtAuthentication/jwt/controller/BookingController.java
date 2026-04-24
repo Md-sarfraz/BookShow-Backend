@@ -234,6 +234,16 @@ public class BookingController {
         }
     }
 
+    @PostMapping("/cancel/{bookingId}")
+    public ResponseEntity<CancelBookingResponseDto> cancelBookingByPath(
+            @PathVariable("bookingId") Long bookingId,
+            Authentication authentication
+    ) {
+        CancelBookingRequestDto request = new CancelBookingRequestDto();
+        request.setBookingId(bookingId);
+        return cancelBooking(request, authentication);
+    }
+
     // Backward-compatible legacy endpoint.
     @PutMapping("/{bookingId}/cancel")
     public ResponseEntity<CancelBookingResponseDto> cancelBookingLegacy(

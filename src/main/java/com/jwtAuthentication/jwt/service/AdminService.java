@@ -146,6 +146,9 @@ public class AdminService {
         }
 
         booking.setPaymentStatus(newStatus);
+        if (newStatus == Booking.PaymentStatus.CANCELLED) {
+            booking.setStatus(Booking.BookingStatus.CANCELLED);
+        }
 
         if (newStatus == Booking.PaymentStatus.CONFIRMED && booking.getConfirmedAt() == null) {
             booking.setConfirmedAt(LocalDateTime.now());

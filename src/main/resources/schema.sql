@@ -13,3 +13,13 @@ ALTER TABLE bookings
     MODIFY COLUMN payment_status ENUM('PENDING','CONFIRMED','FAILED','EXPIRED','CANCELLED')
     NOT NULL DEFAULT 'PENDING';
 
+-- Add booking lifecycle state for real-time cancellation policy.
+ALTER TABLE bookings
+    ADD COLUMN IF NOT EXISTS booking_status ENUM('BOOKED','CANCELLED')
+    NOT NULL DEFAULT 'BOOKED';
+
+-- Keep booking_status in sync for records already marked cancelled.
+UPDATE bookings
+SET booking_status = 'CANCELLED'
+WHERE payment_status = 'CANCELLED';
+

@@ -16,5 +16,7 @@ public class CancellationPreviewResponseDto {
     private Double convenienceFeeDeducted;
     private Double refundPercentage;
     private String refundStatus;
-    private String showDateTime;
+    private String bookingTime;
+    private String cancellationDeadline;
+    private Long cancellationWindowHours;
 }

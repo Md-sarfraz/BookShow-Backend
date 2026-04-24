@@ -62,11 +62,15 @@ public class Booking {
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_status", nullable = false)
+    private BookingStatus status = BookingStatus.BOOKED;
+
     @Column(name = "booking_reference", unique = true)
     private String bookingReference; // e.g. BTS12345678
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -79,10 +83,22 @@ public class Booking {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+
+        if (status == null) {
+            status = BookingStatus.BOOKED;
+        }
+
         if (bookingReference == null) {
             bookingReference = "BTS" + System.currentTimeMillis();
         }
+    }
+
+    public enum BookingStatus {
+        BOOKED,
+        CANCELLED
     }
 
     public enum PaymentStatus {
